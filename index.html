@@ -74,18 +74,21 @@
 
         /* --- Прайс / Сетки --- */
         .price-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: flex; /* Переключаем на flex для удобного выравнивания */
+            flex-wrap: wrap;
             gap: 40px;
+            justify-content: center; /* Это свойство поставит нижнюю карточку по центру */
         }
 
-        .card {
-            background: white;
-            transition: 0.5s;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #eee;
-        }
+		.card {
+			background: white;
+			transition: 0.5s;
+			position: relative;
+			overflow: hidden;
+			border: 1px solid #eee;
+			flex: 1 1 280px; /* Карточки будут гибкими, но не меньше 280px */
+			max-width: 320px; /* Чтобы они не становились слишком широкими в нижнем ряду */
+		}
 
         .card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
 
@@ -175,7 +178,7 @@
                 <div class="card-img" style="background-image: url('https://cdn4.telesco.pe/file/PNaJa9mXdpYHP9tNElrSh7AjZYlHd-tygSw1bP-n6_UhqftnEJ53dpSCX59ZmC5QiB1QCrMedwMJDhLvpKXdygmuKX3yrUY1IJlNrwcDqA2TbfsVERUhW3s1WIiYYajVhxVFDgMCQ8u9OtKFEVHnAnJIdIhqXGz6XQCpwuPRviaGUBE_2xZUCOGbFws0zyFNslvpLreFkFSvyW-t3Oag20dqAcGqbmDIPzfnpFKB_SrmYMmURFkMIbPxYLGcowhYjWrHGmswumiXsOnChaRnnpYCzeyuUDKXSWhIAM3DJUcy_bIAlZKkkv_QPOJ6vivVOjRzGPcT5MqwP6N1JlimIw.jpg')"></div>
                 <div class="card-info">
                     <h3>Парная</h3>
-                    <div class="price-tag">100$</div>
+                    <div class="price-tag">120$</div>
                 </div>
             </div>
             <div class="card" data-aos="fade-up" data-aos-delay="300">
@@ -245,7 +248,7 @@
         
         <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
             
-            <a href="https://wa.me/380682552141" target="_blank" class="btn">
+            <a href="https://wa.me/380682552142" target="_blank" class="btn">
                 Написать в WhatsApp
             </a>
 
