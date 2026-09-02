@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фотограф в Хургаде | Фотосессии на закате</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+	
+	   html {
+        scroll-behavior: smooth; /* Плавный скролл */
+       }
+	
+        :root {
+            --gold: #c5a059;
+            --dark: #222;
+            --light: #fdfdfd;
+            --soft-bg: #f8f4f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.7;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+
+        /* --- Главный экран --- */
+        .hero {
+            height: 100vh;
+            /* СЮДА МОЖНО ВСТАВИТЬ ГЛАВНОЕ ФОТО ОБЛОЖКИ */
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('back.jpg') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px; }
+
+        /* --- Кнопки --- */
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: var(--gold);
+            color: white;
+            text-decoration: none;
+            border-radius: 0;
+            transition: 0.4s;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        .btn:hover { background: var(--dark); transform: translateY(-3px); }
+
+        /* --- Секции --- */
+        .section { padding: 100px 10%; max-width: 1400px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+        .section-title span { display: block; font-size: 0.9rem; font-family: 'Montserrat'; text-transform: uppercase; color: var(--gold); letter-spacing: 4px; margin-bottom: 10px; }
+
+        /* --- Прайс / Сетки --- */
+        .price-grid {
+            display: flex; /* Переключаем на flex для удобного выравнивания */
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center; /* Это свойство поставит нижнюю карточку по центру */
+        }
+
+		.card {
+			background: white;
+			transition: 0.5s;
+			position: relative;
+			overflow: hidden;
+			border: 1px solid #eee;
+			flex: 1 1 280px; /* Карточки будут гибкими, но не меньше 280px */
+			max-width: 320px; /* Чтобы они не становились слишком широкими в нижнем ряду */
+		}
+
+        .card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+
+        .card-img {
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            transition: 0.6s;
+        }
+        .card:hover .card-img { transform: scale(1.05); }
+
+        .card-info { padding: 30px; text-align: center; }
+        .card-info h3 { margin: 0 0 10px; font-size: 1.5rem; }
+        .price-tag { font-size: 1.3rem; color: var(--gold); font-weight: 600; }
+
+        /* --- Локации и Время --- */
+        .info-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            background: var(--soft-bg);
+            padding: 80px 10%;
+            align-items: center;
+        }
+
+        .info-content h2 { font-size: 2.2rem; margin-bottom: 20px; }
+        .info-content p { margin-bottom: 25px; color: #555; }
+
+        /* --- Трансфер --- */
+        .transfer-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .option {
+            padding: 40px;
+            border: 1px solid #ddd;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .option.featured { background: var(--dark); color: white; border-color: var(--dark); }
+        .option h3 { margin-bottom: 15px; }
+        .option .cost { display: block; font-size: 1.8rem; margin: 15px 0; color: var(--gold); }
+
+        /* --- Футер --- */
+        footer {
+            padding: 80px 20px;
+            text-align: center;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+        footer h2 { font-size: 2.5rem; margin-bottom: 20px; }
+
+        /* Мобильная адаптация */
+        @media (max-width: 900px) {
+            .info-split { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .section { padding: 60px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div data-aos="fade-up" data-aos-duration="1500">
+            <p>Hurghada Photography</p>
+            <h1>Искусство момента</h1>
+            <a href="#contacts" class="btn">Забронировать съёмку</a>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="section-title" data-aos="fade-up">
+            <span>Прайс-лист</span>
+            <h2>Варианты фотосессий</h2>
+        </div>
+        
+        <div class="price-grid">
+            <div class="card" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-img" style="background-image: url('https://selesnow.github.io/photos/flying_dress.jpg')"></div>
+                <div class="card-info">
+                    <h3>Flying Dress</h3>
+                    <div class="price-tag">150$</div>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-img" style="background-image: url('https://selesnow.github.io/photos/couple.jpg')"></div>
+                <div class="card-info">
+                    <h3>Парная</h3>
+                    <div class="price-tag">120$</div>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-img" style="background-image: url('https://selesnow.github.io/photos/single.jpg')"></div>
+                <div class="card-info">
+                    <h3>Одиночная</h3>
+                    <div class="price-tag">100$</div>
+                </div>
+            </div>
+            <div class="card" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-img" style="background-image: url('https://selesnow.github.io/photos/family.jpg')"></div>
+                <div class="card-info">
+                    <h3>Семейная</h3>
+                    <div class="price-tag">150$</div>
+                </div>
+            </div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 50px; font-style: italic; opacity: 0.7;">
+            Оплата производится за результат, а не за время (от 1 до 3 часов съемки).
+        </p>
+    </section>
+
+    <div class="info-split">
+        <div class="info-content" data-aos="fade-right">
+            <span>Локации</span>
+            <h2>Где будем снимать?</h2>
+            <p>Я подготовила для вас список самых эстетичных и проверенных локаций в Хургаде. Посмотреть фото мест можно в моем Telegram-канале.</p>
+            <a href="https://t.me/photographer_kristina_seleznowa" target="_blank" class="btn" style="background: #0088cc;">Telegram Канал</a>
+        </div>
+        <div class="info-content" data-aos="fade-left">
+            <span>Магия света</span>
+            <h2>Идеальное время</h2>
+            <p>Мы снимаем на закате. Летом это спасение от жары, а зимой — возможность застать невероятно мягкие, розовые горизонты.</p>
+        </div>
+    </div>
+
+    <section class="section" id="booking">
+        <div class="section-title" data-aos="fade-up">
+            <span>Комфорт</span>
+            <h2>Трансфер до места</h2>
+        </div>
+        
+        <div class="transfer-box">
+            <div class="option" data-aos="zoom-in" data-aos-delay="100">
+                <h3>Самостоятельно</h3>
+                <p>Вы вызываете Uber. Самый бюджетный вариант. Оплачиваете только фотосессию.</p>
+                <span class="cost">0$</span>
+            </div>
+            <div class="option" data-aos="zoom-in" data-aos-delay="200">
+                <h3>Вместе со мной</h3>
+                <p>Я заезжаю за вами в отель, едем на такси вместе. Удобно и просто.</p>
+                <span class="cost">~20$</span>
+            </div>
+            <div class="option featured" data-aos="zoom-in" data-aos-delay="300">
+                <h3>Всё включено 🌟</h3>
+                <p>Полная организация. Забираю, жду на локации и привожу обратно в отель.</p>
+                <span class="cost">от 30$</span>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacts" data-aos="fade-up">
+        <h2>Буду рада вашему ответу 🤍</h2>
+        <p>Напишите мне, чтобы обсудить детали и выбрать дату</p>
+        <br>
+        
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            
+            <a href="https://wa.me/380682552141" target="_blank" class="btn">
+                WhatsApp
+            </a>
+
+            <a href="https://t.me/Kristina_Selesnova_photo" target="_blank" class="btn" style="background: #0088cc;">
+                Telegram
+            </a>
+
+            <a href="https://www.instagram.com/kristinaseleznowa" target="_blank" class="btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border: none;">
+                Instagram
+            </a>
+            
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+</body>
+</html>
