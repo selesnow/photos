@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="no-js">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +17,9 @@
   <!-- Swiper.js CSS CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   
+  <!-- JS-feature flag для анимаций появления (защита от flash при отключённом JS) -->
+  <script>document.documentElement.classList.replace('no-js','js');</script>
+
   <!-- Modern Clean Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -41,6 +44,7 @@
         <a href="#portfolio" class="nav-link">Портфолио</a>
         <a href="#packages" class="nav-link">Виды съёмок</a>
         <a href="#locations" class="nav-link">Локации</a>
+        <a href="#reviews" class="nav-link">Отзывы</a>
         <a href="#calculator" class="nav-link">Калькулятор</a>
         <a href="#conditions" class="nav-link">Условия</a>
         <a href="#faq" class="nav-link">FAQ</a>
@@ -107,14 +111,14 @@
   <!-- ==================== 3. PORTFOLIO SECTION ==================== -->
   <section class="portfolio-section" id="portfolio">
     <div class="container">
-      <div class="section-title-wrap">
+      <div class="section-title-wrap" data-reveal>
         <span class="section-subtitle">Портфолио</span>
         <h2 class="section-title">Галерея живых кадров</h2>
         <p class="section-desc">Нажмите на фотографию, чтобы открыть её на весь экран в высоком разрешении</p>
       </div>
 
       <!-- Табы -->
-      <div class="tabs-wrapper">
+      <div class="tabs-wrapper" data-reveal>
         <button class="tab-btn active" data-tab="family">👨‍👩‍👧‍👦 Семейные</button>
         <button class="tab-btn" data-tab="couple">💑 Парные</button>
         <button class="tab-btn" data-tab="single">✨ Индивидуальные</button>
@@ -205,7 +209,7 @@
   <!-- ==================== 4. PACKAGES SECTION ==================== -->
   <section class="packages-section" id="packages">
     <div class="container">
-      <div class="section-title-wrap">
+      <div class="section-title-wrap" data-reveal>
         <span class="section-subtitle">Пакеты и стоимость</span>
         <h2 class="section-title">Виды фотосессий</h2>
         <p class="section-desc">Оплата в день съёмки. Фиксированная стоимость за результат, а не за время на часах.</p>
@@ -213,7 +217,7 @@
 
       <div class="packages-grid">
         <!-- Пакет 1: Семейная -->
-        <div class="package-card">
+        <div class="package-card" data-reveal>
           <div class="package-header">
             <span class="package-icon">👨‍👩‍👧‍👦</span>
             <h3 class="package-title">Семейная</h3>
@@ -233,7 +237,7 @@
         </div>
 
         <!-- Пакет 2: Парная (Featured) -->
-        <div class="package-card featured">
+        <div class="package-card featured" data-reveal>
           <span class="package-badge">Популярный выбор</span>
           <div class="package-header">
             <span class="package-icon">❤️</span>
@@ -254,7 +258,7 @@
         </div>
 
         <!-- Пакет 3: Индивидуальная -->
-        <div class="package-card">
+        <div class="package-card" data-reveal>
           <div class="package-header">
             <span class="package-icon">✨</span>
             <h3 class="package-title">Индивидуальная</h3>
@@ -274,7 +278,7 @@
         </div>
 
         <!-- Пакет 4: Летящие платья -->
-        <div class="package-card">
+        <div class="package-card" data-reveal>
           <div class="package-header">
             <span class="package-icon">👗🪽</span>
             <h3 class="package-title">Летящие платья</h3>
@@ -299,7 +303,7 @@
   <!-- ==================== 5. LOCATIONS SECTION ==================== -->
   <section class="locations-section" id="locations">
     <div class="container">
-      <div class="section-title-wrap">
+      <div class="section-title-wrap" data-reveal>
         <span class="section-subtitle">Атмосферные места</span>
         <h2 class="section-title">Локации для фотосессий</h2>
         <p class="section-desc">Выбирайте красивые природные и архитектурные места Хургады и побережья</p>
@@ -307,7 +311,7 @@
 
       <div class="locations-grid">
         <!-- 1. Хургада (Mamsha) -->
-        <div class="location-card">
+        <div class="location-card" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/mamsha/2.jpg">
               <img src="img/mamsha/thumb/2.jpg" alt="Хургада Mamsha 2" loading="lazy">
@@ -339,7 +343,7 @@
         </div>
 
         <!-- 2. Эль-Гуна -->
-        <div class="location-card">
+        <div class="location-card" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/el_gouna/7.jpg">
               <img src="img/el_gouna/thumb/7.jpg" alt="Эль-Гуна 7" loading="lazy">
@@ -371,7 +375,7 @@
         </div>
 
         <!-- 3. Пустыня -->
-        <div class="location-card">
+        <div class="location-card" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/desert/3.jpg">
               <img src="img/desert/thumb/3.jpg" alt="Пустыня 3" loading="lazy">
@@ -403,7 +407,7 @@
         </div>
 
         <!-- 4. Утёс (Sofaga) -->
-        <div class="location-card">
+        <div class="location-card" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/sofaga/5.jpg">
               <img src="img/sofaga/thumb/5.jpg" alt="Утёс Safaga 5" loading="lazy">
@@ -435,7 +439,7 @@
         </div>
 
         <!-- 5. Море + Пустыня -->
-        <div class="location-card">
+        <div class="location-card" data-reveal>
           <div class="location-gallery-thumbs thumbs-4">
             <div class="location-thumb main" data-full="img/sofaga_sea/22.jpg">
               <img src="img/sofaga_sea/thumb/22.jpg" alt="Море и Пустыня 22" loading="lazy">
@@ -470,16 +474,80 @@
     </div>
   </section>
 
+  <!-- ==================== 5.1 REVIEWS SECTION ==================== -->
+  <section class="reviews-section" id="reviews">
+    <div class="container">
+      <div class="section-title-wrap" data-reveal>
+        <span class="section-subtitle">Отзывы клиентов</span>
+        <h2 class="section-title">Что говорят гости Хургады</h2>
+        <p class="section-desc">Скриншоты реальных откликов из моего Instagram — после каждой съёмки</p>
+      </div>
+
+      <div class="swiper swiper-reviews" data-reveal>
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="review-card" data-full="img/reviews/1.jpg">
+              <img src="img/reviews/1.jpg" alt="Отзыв клиента о фотосессии в Хургаде 1" loading="lazy">
+              <div class="review-overlay"><span class="review-zoom-btn"><i class="ri-search-eye-line"></i></span></div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card" data-full="img/reviews/2.jpg">
+              <img src="img/reviews/2.jpg" alt="Отзыв клиента о фотосессии в Хургаде 2" loading="lazy">
+              <div class="review-overlay"><span class="review-zoom-btn"><i class="ri-search-eye-line"></i></span></div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card" data-full="img/reviews/3.jpg">
+              <img src="img/reviews/3.jpg" alt="Отзыв клиента о фотосессии в Хургаде 3" loading="lazy">
+              <div class="review-overlay"><span class="review-zoom-btn"><i class="ri-search-eye-line"></i></span></div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card" data-full="img/reviews/4.jpg">
+              <img src="img/reviews/4.jpg" alt="Отзыв клиента о фотосессии в Хургаде 4" loading="lazy">
+              <div class="review-overlay"><span class="review-zoom-btn"><i class="ri-search-eye-line"></i></span></div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card" data-full="img/reviews/5.jpg">
+              <img src="img/reviews/5.jpg" alt="Отзыв клиента о фотосессии в Хургаде 5" loading="lazy">
+              <div class="review-overlay"><span class="review-zoom-btn"><i class="ri-search-eye-line"></i></span></div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card" data-full="img/reviews/6.jpg">
+              <img src="img/reviews/6.jpg" alt="Отзыв клиента о фотосессии в Хургаде 6" loading="lazy">
+              <div class="review-overlay"><span class="review-zoom-btn"><i class="ri-search-eye-line"></i></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-controls">
+          <button class="swiper-btn-prev reviews-prev"><i class="ri-arrow-left-s-line"></i></button>
+          <button class="swiper-btn-next reviews-next"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+      </div>
+
+      <div class="reviews-cta" data-reveal>
+        <a href="https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MDcwNDY3NDQwMTk2NzAz?story_media_id=3764331898764851128_7074607207&xtok=eGh3MmpmbWg2eDZy" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <i class="ri-instagram-line"></i>
+          <span>Больше отзывов в Instagram</span>
+          <i class="ri-external-link-line"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ==================== 6. CALCULATOR SECTION ==================== -->
   <section class="calculator-section" id="calculator">
     <div class="container">
-      <div class="section-title-wrap">
+      <div class="section-title-wrap" data-reveal>
         <span class="section-subtitle">Онлайн Конструктор</span>
         <h2 class="section-title">Рассчитайте стоимость съёмки</h2>
         <p class="section-desc">Соберите свой комплект услуг и забронируйте удобный день</p>
       </div>
 
-      <div class="calc-box">
+      <div class="calc-box" data-reveal>
         <div class="calc-left">
           <!-- Шаг 1 -->
           <div class="calc-step-title">
@@ -626,31 +694,31 @@
   <!-- ==================== 7. CONDITIONS SECTION ==================== -->
   <section class="info-section" id="conditions">
     <div class="container">
-      <div class="section-title-wrap">
+      <div class="section-title-wrap" data-reveal>
         <span class="section-subtitle">Прозрачные условия</span>
         <h2 class="section-title">Как мы работаем</h2>
       </div>
 
       <div class="info-grid">
-        <div class="info-card">
+        <div class="info-card" data-reveal>
           <div class="info-icon"><i class="ri-time-line"></i></div>
           <h3 class="info-title">Оплата за результат</h3>
           <p class="info-text">Съёмка длится от 1 до 3 часов, пока не сделаем все задуманные красивые кадры.</p>
         </div>
 
-        <div class="info-card">
+        <div class="info-card" data-reveal>
           <div class="info-icon"><i class="ri-money-dollar-circle-line"></i></div>
           <h3 class="info-title">Удобная оплата</h3>
           <p class="info-text">Полный расчёт производится наличными в день съёмки после её завершения.</p>
         </div>
 
-        <div class="info-card">
+        <div class="info-card" data-reveal>
           <div class="info-icon"><i class="ri-user-smile-line"></i></div>
           <h3 class="info-title">Помощь в позировании</h3>
           <p class="info-text">Подскажу выгодные ракурсы и движения, даже если вы никогда раньше не фотографировались.</p>
         </div>
 
-        <div class="info-card">
+        <div class="info-card" data-reveal>
           <div class="info-icon"><i class="ri-image-edit-line"></i></div>
           <h3 class="info-title">Готовые фото за 14 дней</h3>
           <p class="info-text">Вы получите готовые обработанные снимки через удобную онлайн-галерею в течение 2 недель.</p>
@@ -662,13 +730,13 @@
   <!-- ==================== 8. FAQ SECTION ==================== -->
   <section class="faq-section" id="faq">
     <div class="container">
-      <div class="section-title-wrap">
+      <div class="section-title-wrap" data-reveal>
         <span class="section-subtitle">Вопросы и ответы</span>
         <h2 class="section-title">Часто задаваемые вопросы</h2>
       </div>
 
       <div class="faq-wrapper">
-        <div class="faq-item active">
+        <div class="faq-item active" data-reveal>
           <button class="faq-question">
             <span>В какой валюте происходит оплата?</span>
             <i class="ri-add-line faq-icon"></i>
@@ -678,7 +746,7 @@
           </div>
         </div>
 
-        <div class="faq-item">
+        <div class="faq-item" data-reveal>
           <button class="faq-question">
             <span>Поможете ли вы с подбором одежды?</span>
             <i class="ri-add-line faq-icon"></i>
@@ -688,7 +756,7 @@
           </div>
         </div>
 
-        <div class="faq-item">
+        <div class="faq-item" data-reveal>
           <button class="faq-question">
             <span>Как добраться до локаций?</span>
             <i class="ri-add-line faq-icon"></i>
@@ -698,7 +766,7 @@
           </div>
         </div>
 
-        <div class="faq-item">
+        <div class="faq-item" data-reveal>
           <button class="faq-question">
             <span>Что входит в спец-пакет «Летящие платья»?</span>
             <i class="ri-add-line faq-icon"></i>
@@ -730,6 +798,7 @@
             <li><a href="#portfolio">Портфолио</a></li>
             <li><a href="#packages">Пакеты и Цены</a></li>
             <li><a href="#locations">Локации</a></li>
+            <li><a href="#reviews">Отзывы</a></li>
             <li><a href="#calculator">Калькулятор</a></li>
           </ul>
         </div>
@@ -769,8 +838,15 @@
   <!-- Модальное окно Lightbox -->
   <div class="lightbox-modal" id="lightbox-modal">
     <span class="lightbox-close" id="lightbox-close">&times;</span>
+    <button class="lightbox-nav lightbox-nav-prev" id="lightbox-prev" aria-label="Предыдущее фото" type="button">
+      <i class="ri-arrow-left-s-line"></i>
+    </button>
+    <button class="lightbox-nav lightbox-nav-next" id="lightbox-next" aria-label="Следующее фото" type="button">
+      <i class="ri-arrow-right-s-line"></i>
+    </button>
     <img src="" alt="Увеличенное фото" class="lightbox-img" id="lightbox-img">
     <div class="lightbox-caption" id="lightbox-caption" style="display:none;"></div>
+    <div class="lightbox-counter" id="lightbox-counter" style="display:none;"></div>
   </div>
 
   <!-- Модальное окно для видеообзоров локаций (Instagram Reels) -->

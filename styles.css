@@ -135,6 +135,53 @@ body {
   }
 }
 
+/* --- Scroll Reveal (появление блоков при скролле) --- */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html.js [data-reveal].in-view {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+/* Hero entry animation — играет на загрузке страницы */
+.hero-badge,
+.hero-title,
+.hero-subtitle,
+.hero-actions,
+.hero-features {
+  animation: heroReveal 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.hero-badge    { animation-delay: 0.05s; }
+.hero-title    { animation-delay: 0.18s; }
+.hero-subtitle { animation-delay: 0.32s; }
+.hero-actions  { animation-delay: 0.46s; }
+.hero-features { animation-delay: 0.6s; }
+
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .hero-badge, .hero-title, .hero-subtitle,
+  .hero-actions, .hero-features {
+    animation: none !important;
+  }
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -868,6 +915,100 @@ section {
   transform: translateY(-2px);
 }
 
+/* --- 8.1 Reviews Section --- */
+.reviews-section {
+  padding: 6rem 0;
+}
+
+.reviews-section .swiper {
+  padding: 0.5rem 0.5rem 1rem;
+  margin: 0 -0.5rem;
+}
+
+.review-card {
+  position: relative;
+  z-index: 2;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 9 / 16;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.review-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(229, 193, 88, 0.08);
+}
+
+.review-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.review-card:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(229, 193, 88, 0.1);
+}
+
+.review-card:hover img {
+  transform: scale(1.04);
+}
+
+.review-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.75) 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 1rem;
+  opacity: 0;
+  transition: var(--transition-fast);
+}
+
+.review-card:hover .review-overlay {
+  opacity: 1;
+}
+
+.review-zoom-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--accent-gold);
+  color: #0A0C0F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.reviews-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.reviews-cta .btn {
+  gap: 0.6rem;
+}
+
+.reviews-cta .btn i.ri-external-link-line {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
 /* --- 9. Calculator Section --- */
 .calculator-section {
   padding: 6rem 0;
@@ -1307,6 +1448,67 @@ section {
 
 .lightbox-close:hover {
   color: var(--accent-gold);
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 21, 29, 0.75);
+  border: 1px solid var(--border-gold);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  transition: var(--transition-fast);
+  z-index: 3;
+}
+
+.lightbox-nav:hover {
+  background: var(--accent-gold);
+  color: #0A0C0F;
+  border-color: var(--accent-gold);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.lightbox-nav-prev { left: 2rem; }
+.lightbox-nav-next { right: 2rem; }
+
+.lightbox-counter {
+  margin-top: 0.7rem;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: rgba(18, 21, 29, 0.75);
+  padding: 0.3rem 0.9rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  display: inline-flex;
+  align-items: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.lightbox-counter.active { display: inline-flex; }
+
+@media (max-width: 768px) {
+  .lightbox-nav {
+    width: 42px;
+    height: 42px;
+    font-size: 1.4rem;
+  }
+  .lightbox-nav-prev { left: 0.75rem; }
+  .lightbox-nav-next { right: 0.75rem; }
+  .lightbox-close { top: 1rem; right: 1rem; font-size: 2.1rem; }
 }
 
 /* Video Modal (Instagram Reels) */

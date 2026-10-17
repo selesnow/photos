@@ -76,6 +76,21 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   });
 
+  const reviewsSwiper = new Swiper('.swiper-reviews', {
+    slidesPerView: 1,
+    spaceBetween: 18,
+    loop: true,
+    grabCursor: true,
+    breakpoints: {
+      640: { slidesPerView: 2, spaceBetween: 20 },
+      1024: { slidesPerView: 3, spaceBetween: 24 }
+    },
+    navigation: {
+      nextEl: '.reviews-next',
+      prevEl: '.reviews-prev',
+    },
+  });
+
   /* --- 3. Переключение вкладок Портфолио (Tabs) --- */
   const tabBtns = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
@@ -299,47 +314,159 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxClose = document.getElementById('lightbox-close');
   const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxCounter = document.getElementById('lightbox-counter');
+  const lightboxPrev = document.getElementById('lightbox-prev');
+  const lightboxNext = document.getElementById('lightbox-next');
 
-  function openLightbox(src, location) {
-    if (lightboxModal && lightboxImg) {
-      lightboxImg.src = src;
-      if (lightboxCaption) {
-        if (location) {
-          lightboxCaption.innerHTML = `<span class="lightbox-caption-label">Локация:</span> ${location}`;
-          lightboxCaption.style.display = 'inline-flex';
-        } else {
-          lightboxCaption.style.display = 'none';
-        }
-      }
-      lightboxModal.classList.add('active');
+  let lightboxCollection = [];
+  let lightboxIndex = 0;
+
+  function formatLightboxCaption(item) {
+    if (!item || !item.text) return '';
+    if (item.type === 'location') {
+      return `<span class="lightbox-caption-label">Локация:</span> ${item.text}`;
     }
+    return item.text;
+  }
+
+  function preloadLightboxNeighbor(delta) {
+    if (lightboxCollection.length < 2) return;
+    const len = lightboxCollection.length;
+    const idx = ((lightboxIndex + delta) % len + len) % len;
+    const item = lightboxCollection[idx];
+    if (item && item.src) {
+      const img = new Image();
+      img.src = item.src;
+    }
+  }
+
+  function updateLightboxView() {
+    const item = lightboxCollection[lightboxIndex];
+    if (!item || !lightboxImg) return;
+
+    lightboxImg.src = item.src;
+
+    if (lightboxCaption) {
+      const html = formatLightboxCaption(item);
+      if (html) {
+        lightboxCaption.innerHTML = html;
+        lightboxCaption.style.display = 'inline-flex';
+      } else {
+        lightboxCaption.style.display = 'none';
+      }
+    }
+
+    const hasMultiple = lightboxCollection.length > 1;
+    if (lightboxCounter) {
+      if (hasMultiple) {
+        lightboxCounter.textContent = `${lightboxIndex + 1} / ${lightboxCollection.length}`;
+        lightboxCounter.style.display = 'inline-flex';
+      } else {
+        lightboxCounter.style.display = 'none';
+      }
+    }
+    if (lightboxPrev) lightboxPrev.style.display = hasMultiple ? '' : 'none';
+    if (lightboxNext) lightboxNext.style.display = hasMultiple ? '' : 'none';
+
+    preloadLightboxNeighbor(1);
+    preloadLightboxNeighbor(-1);
+  }
+
+  function navigateLightbox(delta) {
+    if (lightboxCollection.length < 2) return;
+    const len = lightboxCollection.length;
+    lightboxIndex = ((lightboxIndex + delta) % len + len) % len;
+    updateLightboxView();
+  }
+
+  function openLightbox(collection, index) {
+    if (!lightboxModal || !collection || !collection.length) return;
+    lightboxCollection = collection;
+    lightboxIndex = Math.max(0, Math.min(index, collection.length - 1));
+    updateLightboxView();
+    lightboxModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
 
   function closeLightbox() {
-    if (lightboxModal) {
-      lightboxModal.classList.remove('active');
-    }
+    if (!lightboxModal) return;
+    lightboxModal.classList.remove('active');
+    document.body.style.overflow = '';
   }
 
-  // Клики на слайды портфолио
+  function buildPortfolioCollection(photoEl) {
+    const tab = photoEl.closest('.tab-content');
+    if (!tab) return null;
+    const slides = tab.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate) .swiper-slide-photo');
+    return Array.from(slides).map(el => ({
+      src: el.getAttribute('data-full'),
+      type: 'location',
+      text: el.getAttribute('data-location') || ''
+    }));
+  }
+
+  function buildLocationCollection(thumbEl) {
+    const card = thumbEl.closest('.location-card');
+    if (!card) return null;
+    const locName = card.querySelector('.location-name')?.textContent?.trim() || '';
+    const thumbs = card.querySelectorAll('.location-thumb');
+    return Array.from(thumbs).map(el => ({
+      src: el.getAttribute('data-full'),
+      type: 'location',
+      text: locName
+    }));
+  }
+
+  function buildReviewsCollection() {
+    const section = document.getElementById('reviews');
+    if (!section) return null;
+    const cards = section.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate) .review-card');
+    return Array.from(cards).map(el => ({
+      src: el.getAttribute('data-full'),
+      type: 'review',
+      text: 'Отзыв из Instagram'
+    }));
+  }
+
+  // Клики на слайды портфолио, миниатюры локаций, карточки отзывов
   document.addEventListener('click', (e) => {
     const photoContainer = e.target.closest('.swiper-slide-photo');
     const thumbContainer = e.target.closest('.location-thumb');
+    const reviewCard = e.target.closest('.review-card');
+
+    let collection = null;
+    let clickedSrc = null;
 
     if (photoContainer) {
-      const fullSrc = photoContainer.getAttribute('data-full');
-      const location = photoContainer.getAttribute('data-location') || '';
-      if (fullSrc) openLightbox(fullSrc, location);
+      collection = buildPortfolioCollection(photoContainer);
+      clickedSrc = photoContainer.getAttribute('data-full');
     } else if (thumbContainer) {
-      const fullSrc = thumbContainer.getAttribute('data-full');
-      const card = thumbContainer.closest('.location-card');
-      const location = card ? card.querySelector('.location-name')?.textContent?.trim() : '';
-      if (fullSrc) openLightbox(fullSrc, location);
+      collection = buildLocationCollection(thumbContainer);
+      clickedSrc = thumbContainer.getAttribute('data-full');
+    } else if (reviewCard) {
+      collection = buildReviewsCollection();
+      clickedSrc = reviewCard.getAttribute('data-full');
+    }
+
+    if (collection && clickedSrc) {
+      const idx = collection.findIndex(item => item.src === clickedSrc);
+      openLightbox(collection, idx >= 0 ? idx : 0);
     }
   });
 
-  if (lightboxClose) {
-    lightboxClose.addEventListener('click', closeLightbox);
+  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+
+  if (lightboxPrev) {
+    lightboxPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateLightbox(-1);
+    });
+  }
+  if (lightboxNext) {
+    lightboxNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigateLightbox(1);
+    });
   }
 
   if (lightboxModal) {
@@ -347,6 +474,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target === lightboxModal) closeLightbox();
     });
   }
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightboxModal || !lightboxModal.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowLeft') navigateLightbox(-1);
+    else if (e.key === 'ArrowRight') navigateLightbox(1);
+  });
 
   /* --- 5.1. Модальное окно видеообзора (Instagram Reels) --- */
   const videoModal = document.getElementById('video-modal');
@@ -607,5 +741,45 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   initAmbientBackground();
+
+  /* --- 8. Scroll Reveal (появление блоков при скролле) --- */
+  function initScrollReveal() {
+    // Каскадная задержка для карточек в сетках
+    const staggerGroups = ['.packages-grid', '.locations-grid', '.info-grid', '.faq-wrapper'];
+    staggerGroups.forEach(selector => {
+      document.querySelectorAll(selector).forEach(group => {
+        Array.from(group.children).forEach((child, i) => {
+          if (child.hasAttribute('data-reveal')) {
+            child.style.setProperty('--reveal-delay', (i * 90) + 'ms');
+          }
+        });
+      });
+    });
+
+    const targets = document.querySelectorAll('[data-reveal]');
+    if (!targets.length) return;
+
+    // Fallback для старых браузеров без IntersectionObserver
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    targets.forEach(el => observer.observe(el));
+  }
+
+  initScrollReveal();
 
 });
