@@ -730,6 +730,27 @@ ul {
   font-weight: 600;
 }
 
+.calc-opt-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 0.25rem;
+  font-weight: 400;
+  transition: var(--transition-fast);
+}
+
+.calc-option-btn.selected .calc-opt-sub {
+  color: rgba(229, 193, 88, 0.9);
+}
+
+.calc-transfer-hint {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  transition: var(--transition-fast);
+}
+
 .calc-checkboxes {
   display: flex;
   flex-direction: column;

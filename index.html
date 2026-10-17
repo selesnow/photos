@@ -116,8 +116,8 @@
       <div class="tab-content active" id="tab-family">
         <div class="swiper swiper-family">
           <div class="swiper-wrapper">
-            <div class="swiper-slide"><div class="swiper-slide-photo" data-full="img/family/1.jpg"><img src="img/family/thumb/1.jpg" alt="Семейное фото 1" loading="lazy"><div class="photo-overlay"><span class="photo-zoom-btn"><i class="ri-search-eye-line"></i></span></div></div></div>
             <div class="swiper-slide"><div class="swiper-slide-photo" data-full="img/family/2.jpg"><img src="img/family/thumb/2.jpg" alt="Семейное фото 2" loading="lazy"><div class="photo-overlay"><span class="photo-zoom-btn"><i class="ri-search-eye-line"></i></span></div></div></div>
+            <div class="swiper-slide"><div class="swiper-slide-photo" data-full="img/family/1.jpg"><img src="img/family/thumb/1.jpg" alt="Семейное фото 1" loading="lazy"><div class="photo-overlay"><span class="photo-zoom-btn"><i class="ri-search-eye-line"></i></span></div></div></div>
             <div class="swiper-slide"><div class="swiper-slide-photo" data-full="img/family/3.jpg"><img src="img/family/thumb/3.jpg" alt="Семейное фото 3" loading="lazy"><div class="photo-overlay"><span class="photo-zoom-btn"><i class="ri-search-eye-line"></i></span></div></div></div>
             <div class="swiper-slide"><div class="swiper-slide-photo" data-full="img/family/4.jpg"><img src="img/family/thumb/4.jpg" alt="Семейное фото 4" loading="lazy"><div class="photo-overlay"><span class="photo-zoom-btn"><i class="ri-search-eye-line"></i></span></div></div></div>
             <div class="swiper-slide"><div class="swiper-slide-photo" data-full="img/family/5.jpg"><img src="img/family/thumb/5.jpg" alt="Семейное фото 5" loading="lazy"><div class="photo-overlay"><span class="photo-zoom-btn"><i class="ri-search-eye-line"></i></span></div></div></div>
@@ -409,24 +409,29 @@
           </div>
           <div class="calc-options-grid" id="calc-loc-grid">
             <button class="calc-option-btn selected" data-loc="hurghada" data-price="0">
-              <span class="calc-opt-name">🌴 Хургада</span>
+              <span class="calc-opt-name">🌴 Хургада Мамша</span>
               <span class="calc-opt-price">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: $30</span>
             </button>
             <button class="calc-option-btn" data-loc="desert" data-price="0">
               <span class="calc-opt-name">🏜 Пустыня</span>
               <span class="calc-opt-price">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: $30</span>
             </button>
             <button class="calc-option-btn" data-loc="cliff" data-price="0">
-              <span class="calc-opt-name">🌅 Утёс (Сафага)</span>
+              <span class="calc-opt-name">🌅 Утёс</span>
               <span class="calc-opt-price">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: $40</span>
             </button>
             <button class="calc-option-btn" data-loc="sea_desert" data-price="0">
               <span class="calc-opt-name">🌊 Море + Пустыня</span>
               <span class="calc-opt-price">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: $40</span>
             </button>
             <button class="calc-option-btn" data-loc="el_gouna" data-price="30">
               <span class="calc-opt-name">🌴 Эль-Гуна</span>
               <span class="calc-opt-price">+$30</span>
+              <span class="calc-opt-sub">🚗 трансфер: $40</span>
             </button>
           </div>
 
@@ -456,11 +461,14 @@
                 <input type="checkbox" id="opt-raw" value="30">
               </div>
             </label>
-            <label class="calc-checkbox-label">
-              <span>🚗 Индивидуальный трансфер</span>
+            <label class="calc-checkbox-label" id="calc-transfer-label">
+              <div>
+                <span>🚗 Индивидуальный трансфер</span>
+                <span class="calc-transfer-hint" id="transfer-loc-note">локация: Хургада Мамша ($30)</span>
+              </div>
               <div style="display:flex; align-items:center; gap:0.6rem;">
-                <span class="calc-opt-price">+$35</span>
-                <input type="checkbox" id="opt-transfer" value="35">
+                <span class="calc-opt-price" id="calc-transfer-price">+$30</span>
+                <input type="checkbox" id="opt-transfer" value="30">
               </div>
             </label>
           </div>
@@ -477,7 +485,11 @@
               </div>
               <div class="summary-item">
                 <span>Локация:</span>
-                <strong id="sum-loc">Хургада</strong>
+                <strong id="sum-loc">Хургада Мамша</strong>
+              </div>
+              <div class="summary-item">
+                <span>Трансфер:</span>
+                <strong id="sum-transfer">Не выбран ($0)</strong>
               </div>
               <div class="summary-item">
                 <span>Доп. услуги:</span>
@@ -581,7 +593,7 @@
             <i class="ri-add-line faq-icon"></i>
           </button>
           <div class="faq-answer">
-            Вы можете приехать на своем такси/авто, либо мы организуем трансфер от вашего отеля ($30-40).
+            Вы можете приехать на своем такси/авто, либо мы организуем комфортный индивидуальный трансфер от вашего отеля. Стоимость трансфера зависит от локации: Хургада Мамша — $30, Пустыня — $30, Эль-Гуна — $40, Утёс — $40, Море + Пустыня — $40.
           </div>
         </div>
 

@@ -106,9 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const optDress = document.getElementById('opt-dress');
   const optRaw = document.getElementById('opt-raw');
   const optTransfer = document.getElementById('opt-transfer');
+  const calcTransferPrice = document.getElementById('calc-transfer-price');
+  const transferLocNote = document.getElementById('transfer-loc-note');
 
   const sumType = document.getElementById('sum-type');
   const sumLoc = document.getElementById('sum-loc');
+  const sumTransfer = document.getElementById('sum-transfer');
   const sumExtras = document.getElementById('sum-extras');
   const sumTime = document.getElementById('sum-time');
   const sumTotal = document.getElementById('sum-total');
@@ -122,18 +125,42 @@ document.addEventListener('DOMContentLoaded', () => {
     dress: '👗🪽 Летящее платье ($150)'
   };
 
-  const locNames = {
-    hurghada: '🌴 Хургада (+$0)',
-    desert: '🏜 Пустыня (+$0)',
-    cliff: '🌅 Утёс Сафага (+$0)',
-    sea_desert: '🌊 Море + Пустыня (+$0)',
-    el_gouna: '🌴 Эль-Гуна (+$30)'
+  const locConfig = {
+    hurghada: {
+      name: '🌴 Хургада Мамша',
+      cleanName: 'Хургада Мамша',
+      transfer: 30,
+      price: 0
+    },
+    desert: {
+      name: '🏜 Пустыня',
+      cleanName: 'Пустыня',
+      transfer: 30,
+      price: 0
+    },
+    cliff: {
+      name: '🌅 Утёс',
+      cleanName: 'Утёс',
+      transfer: 40,
+      price: 0
+    },
+    sea_desert: {
+      name: '🌊 Море + Пустыня',
+      cleanName: 'Море + Пустыня',
+      transfer: 40,
+      price: 0
+    },
+    el_gouna: {
+      name: '🌴 Эль-Гуна (+$30)',
+      cleanName: 'Эль-Гуна',
+      transfer: 40,
+      price: 30
+    }
   };
 
   function updateCalculator() {
     let basePrice = 170;
     let selectedTypeKey = 'family';
-    let locPrice = 0;
     let selectedLocKey = 'hurghada';
     let extrasPrice = 0;
     let extrasList = [];
@@ -150,10 +177,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Получаем выбранную локацию
     calcLocBtns.forEach(btn => {
       if (btn.classList.contains('selected')) {
-        locPrice = parseInt(btn.getAttribute('data-price')) || 0;
         selectedLocKey = btn.getAttribute('data-loc');
       }
     });
+
+    const currentLoc = locConfig[selectedLocKey] || locConfig.hurghada;
+    const locPrice = currentLoc.price;
+    const transferCost = currentLoc.transfer;
+
+    // Обновляем бейдж цены трансфера и подсказку в шаге 3
+    if (calcTransferPrice) {
+      calcTransferPrice.textContent = `+$${transferCost}`;
+    }
+    if (transferLocNote) {
+      transferLocNote.textContent = `локация: ${currentLoc.cleanName} ($${transferCost})`;
+    }
+    if (optTransfer) {
+      optTransfer.value = transferCost;
+    }
+
+    // Расчёт трансфера
+    let transferPrice = 0;
+    let transferSummaryText = 'Не выбран ($0)';
+    let transferMsgText = 'Не требуется (своё авто/такси)';
+
+    if (optTransfer && optTransfer.checked) {
+      transferPrice = transferCost;
+      transferSummaryText = `+$${transferCost} (${currentLoc.cleanName})`;
+      transferMsgText = `Индивидуальный (+$${transferCost}, ${currentLoc.cleanName})`;
+    }
 
     // Дополнительные опции
     if (optFast && optFast.checked) {
@@ -169,25 +221,23 @@ document.addEventListener('DOMContentLoaded', () => {
       extrasPrice += parseInt(optRaw.value);
       extrasList.push('💾 Все исходники');
     }
-    if (optTransfer && optTransfer.checked) {
-      extrasPrice += parseInt(optTransfer.value);
-      extrasList.push('🚗 Трансфер (~$35)');
-    }
 
-    const total = basePrice + locPrice + extrasPrice;
+    const total = basePrice + locPrice + transferPrice + extrasPrice;
 
     // Обновление отображения в карточке Итога
-    sumType.textContent = typeNames[selectedTypeKey] ? typeNames[selectedTypeKey].split(' (')[0] : 'Семейная';
-    sumLoc.textContent = locNames[selectedLocKey] ? locNames[selectedLocKey].split(' (')[0] : 'Хургада';
-    sumExtras.textContent = extrasList.length > 0 ? extrasList.join(', ') : 'Нет';
-    sumTime.textContent = readyDays;
-    sumTotal.textContent = `$${total}`;
+    if (sumType) sumType.textContent = typeNames[selectedTypeKey] ? typeNames[selectedTypeKey].split(' (')[0] : 'Семейная';
+    if (sumLoc) sumLoc.textContent = currentLoc.cleanName;
+    if (sumTransfer) sumTransfer.textContent = transferSummaryText;
+    if (sumExtras) sumExtras.textContent = extrasList.length > 0 ? extrasList.join(', ') : 'Нет';
+    if (sumTime) sumTime.textContent = readyDays;
+    if (sumTotal) sumTotal.textContent = `$${total}`;
 
     // Формирование ссылки для Telegram и WhatsApp
     const messageText = `Здравствуйте, Кристина! 👋%0A` +
       `Хочу забронировать фотосессию в Египте:%0A` +
       `• Вид съёмки: ${typeNames[selectedTypeKey]}%0A` +
-      `• Локация: ${locNames[selectedLocKey]}%0A` +
+      `• Локация: ${currentLoc.name}%0A` +
+      `• Трансфер: ${transferMsgText}%0A` +
       `• Доп. опции: ${extrasList.length > 0 ? extrasList.join(', ') : 'Без доп. опций'}%0A` +
       `• Срок готовности: ${readyDays}%0A` +
       `💰 Итоговая расчётная стоимость: $${total}%0A%0A` +
@@ -231,6 +281,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.selectCalcType = function(typeName) {
     calcTypeBtns.forEach(btn => {
       if (btn.getAttribute('data-type') === typeName) {
+        btn.click();
+      }
+    });
+  };
+
+  window.selectCalcLoc = function(locName) {
+    calcLocBtns.forEach(btn => {
+      if (btn.getAttribute('data-loc') === locName) {
         btn.click();
       }
     });
