@@ -425,6 +425,38 @@ ul {
   opacity: 1;
 }
 
+.photo-loc-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  background: rgba(12, 14, 18, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(229, 193, 88, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  transition: var(--transition-fast);
+}
+
+.photo-loc-badge i {
+  color: var(--accent-gold);
+  font-size: 0.85rem;
+}
+
+.swiper-slide-photo:hover .photo-loc-badge {
+  border-color: var(--accent-gold);
+  background: rgba(12, 14, 18, 0.95);
+}
+
 .photo-zoom-btn {
   width: 40px;
   height: 40px;
@@ -606,6 +638,11 @@ ul {
   gap: 4px;
 }
 
+.location-gallery-thumbs.thumbs-4 {
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: repeat(3, 72px);
+}
+
 .location-thumb {
   position: relative;
   overflow: hidden;
@@ -614,6 +651,10 @@ ul {
 
 .location-thumb.main {
   grid-row: 1 / 3;
+}
+
+.location-gallery-thumbs.thumbs-4 .location-thumb.main {
+  grid-row: 1 / 4;
 }
 
 .location-thumb img {
@@ -1034,7 +1075,9 @@ ul {
   z-index: 2000;
   background-color: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: none;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
@@ -1047,9 +1090,33 @@ ul {
 
 .lightbox-img {
   max-width: 90vw;
-  max-height: 85vh;
+  max-height: 80vh;
   border-radius: var(--radius-md);
   box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  object-fit: contain;
+}
+
+.lightbox-caption {
+  margin-top: 1rem;
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: rgba(18, 21, 29, 0.85);
+  border: 1px solid rgba(229, 193, 88, 0.3);
+  padding: 0.45rem 1.3rem;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-caption-label {
+  color: var(--accent-gold);
+  font-weight: 600;
 }
 
 .lightbox-close {

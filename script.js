@@ -298,10 +298,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxModal = document.getElementById('lightbox-modal');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxClose = document.getElementById('lightbox-close');
+  const lightboxCaption = document.getElementById('lightbox-caption');
 
-  function openLightbox(src) {
+  function openLightbox(src, location) {
     if (lightboxModal && lightboxImg) {
       lightboxImg.src = src;
+      if (lightboxCaption) {
+        if (location) {
+          lightboxCaption.innerHTML = `<span class="lightbox-caption-label">Локация:</span> ${location}`;
+          lightboxCaption.style.display = 'inline-flex';
+        } else {
+          lightboxCaption.style.display = 'none';
+        }
+      }
       lightboxModal.classList.add('active');
     }
   }
@@ -319,10 +328,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (photoContainer) {
       const fullSrc = photoContainer.getAttribute('data-full');
-      if (fullSrc) openLightbox(fullSrc);
+      const location = photoContainer.getAttribute('data-location') || '';
+      if (fullSrc) openLightbox(fullSrc, location);
     } else if (thumbContainer) {
       const fullSrc = thumbContainer.getAttribute('data-full');
-      if (fullSrc) openLightbox(fullSrc);
+      const card = thumbContainer.closest('.location-card');
+      const location = card ? card.querySelector('.location-name')?.textContent?.trim() : '';
+      if (fullSrc) openLightbox(fullSrc, location);
     }
   });
 
