@@ -362,4 +362,186 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* --- 7. Живой анимированный фон (Золотая пыльца и свет курсора) --- */
+  function initAmbientBackground() {
+    const canvas = document.getElementById('ambient-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let particles = [];
+    let isVisible = true;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Плавное слежение за курсором
+    const mouse = {
+      x: -1000,
+      y: -1000,
+      targetX: -1000,
+      targetY: -1000,
+      active: false
+    };
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
+
+    const particleCount = window.innerWidth < 768 ? 26 : 50;
+
+    class Particle {
+      constructor() {
+        this.reset(true);
+      }
+
+      reset(initial = false) {
+        this.x = Math.random() * width;
+        this.y = initial ? Math.random() * height : height + 10 + Math.random() * 20;
+        this.baseRadius = 1.0 + Math.random() * 2.0;
+        this.radius = this.baseRadius;
+        this.baseAlpha = 0.2 + Math.random() * 0.45;
+        this.alpha = this.baseAlpha;
+        this.vy = -(0.18 + Math.random() * 0.42);
+        this.vx = (Math.random() - 0.5) * 0.25;
+        this.swaySpeed = 0.015 + Math.random() * 0.02;
+        this.swayAngle = Math.random() * Math.PI * 2;
+        this.swayDistance = 0.35 + Math.random() * 0.7;
+        this.twinkleSpeed = 0.02 + Math.random() * 0.035;
+        this.twinkleAngle = Math.random() * Math.PI * 2;
+
+        const hues = [
+          '229, 193, 88',  // золото
+          '245, 218, 138', // тёплый свет
+          '255, 235, 175', // шампань
+          '238, 160, 60'   // закатный янтарь
+        ];
+        this.colorRgb = hues[Math.floor(Math.random() * hues.length)];
+      }
+
+      update() {
+        if (!prefersReducedMotion) {
+          this.y += this.vy;
+          this.swayAngle += this.swaySpeed;
+          this.x += Math.sin(this.swayAngle) * this.swayDistance + this.vx;
+
+          this.twinkleAngle += this.twinkleSpeed;
+          this.alpha = this.baseAlpha + Math.sin(this.twinkleAngle) * 0.15;
+          if (this.alpha < 0.05) this.alpha = 0.05;
+
+          if (mouse.active) {
+            const dx = this.x - mouse.x;
+            const dy = this.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 130;
+
+            if (dist < maxDist && dist > 0) {
+              const force = (1 - dist / maxDist) * 1.6;
+              this.x += (dx / dist) * force;
+              this.y += (dy / dist) * force;
+              this.alpha = Math.min(this.alpha + 0.35, 0.95);
+              this.radius = this.baseRadius * (1 + (1 - dist / maxDist) * 0.5);
+            } else {
+              this.radius += (this.baseRadius - this.radius) * 0.1;
+            }
+          }
+        }
+
+        if (this.y < -20 || this.x < -30 || this.x > width + 30) {
+          this.reset(false);
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.colorRgb}, ${this.alpha})`;
+        ctx.fill();
+
+        if (this.radius > 1.8) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius * 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${this.colorRgb}, ${this.alpha * 0.22})`;
+          ctx.fill();
+        }
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.targetX = e.clientX;
+      mouse.targetY = e.clientY;
+      mouse.active = true;
+    }, { passive: true });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.active = false;
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
+      if (isVisible) requestAnimationFrame(loop);
+    });
+
+    window.addEventListener('resize', () => {
+      resize();
+      initParticles();
+    }, { passive: true });
+
+    function loop() {
+      if (!isVisible) return;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Мягкое свечение за курсором
+      if (mouse.active) {
+        mouse.x += (mouse.targetX - mouse.x) * 0.12;
+        mouse.y += (mouse.targetY - mouse.y) * 0.12;
+
+        const glow = ctx.createRadialGradient(
+          mouse.x, mouse.y, 0,
+          mouse.x, mouse.y, 220
+        );
+        glow.addColorStop(0, 'rgba(229, 193, 88, 0.055)');
+        glow.addColorStop(0.5, 'rgba(229, 193, 88, 0.015)');
+        glow.addColorStop(1, 'rgba(229, 193, 88, 0)');
+
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 220, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    resize();
+    initParticles();
+    requestAnimationFrame(loop);
+  }
+
+  initAmbientBackground();
+
 });
