@@ -348,6 +348,70 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* --- 5.1. Модальное окно видеообзора (Instagram Reels) --- */
+  const videoModal = document.getElementById('video-modal');
+  const videoModalBackdrop = document.getElementById('video-modal-backdrop');
+  const videoModalClose = document.getElementById('video-modal-close');
+  const videoModalTitle = document.getElementById('video-modal-title');
+  const videoModalIframe = document.getElementById('video-modal-iframe');
+  const videoModalExternal = document.getElementById('video-modal-external');
+  const videoLoader = document.getElementById('video-loader');
+
+  function openVideoModal(embedUrl, reelUrl, title) {
+    if (!videoModal || !videoModalIframe) return;
+
+    if (videoModalTitle) {
+      videoModalTitle.textContent = title || 'Видеообзор локации';
+    }
+    if (videoModalExternal) {
+      videoModalExternal.href = reelUrl || '#';
+    }
+    if (videoLoader) {
+      videoLoader.style.display = 'flex';
+    }
+
+    videoModalIframe.src = embedUrl;
+    videoModal.classList.add('active');
+    videoModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideoModal() {
+    if (!videoModal || !videoModalIframe) return;
+    videoModal.classList.remove('active');
+    videoModal.setAttribute('aria-hidden', 'true');
+    videoModalIframe.src = 'about:blank';
+    document.body.style.overflow = '';
+  }
+
+  if (videoModalIframe && videoLoader) {
+    videoModalIframe.addEventListener('load', () => {
+      if (videoModalIframe.src && videoModalIframe.src !== 'about:blank' && !videoModalIframe.src.endsWith('about:blank')) {
+        videoLoader.style.display = 'none';
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-embed-url]').forEach(trigger => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const embedUrl = trigger.getAttribute('data-embed-url');
+      const reelUrl = trigger.getAttribute('data-reel-url');
+      const title = trigger.getAttribute('data-video-title');
+      if (embedUrl) openVideoModal(embedUrl, reelUrl, title);
+    });
+  });
+
+  if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
+  if (videoModalBackdrop) videoModalBackdrop.addEventListener('click', closeVideoModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && videoModal && videoModal.classList.contains('active')) {
+      closeVideoModal();
+    }
+  });
+
   /* --- 6. FAQ Аккордеон --- */
   const faqItems = document.querySelectorAll('.faq-item');
 
