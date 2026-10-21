@@ -20,6 +20,9 @@
   <!-- JS-feature flag для анимаций появления (защита от flash при отключённом JS) -->
   <script>document.documentElement.classList.replace('no-js','js');</script>
 
+  <!-- Preload Hero Portrait -->
+  <link rel="preload" as="image" href="img/Christie.jpg">
+
   <!-- Modern Clean Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -66,6 +69,23 @@
   <section class="hero" id="hero">
     <div class="hero-overlay"></div>
     <div class="container hero-container">
+      <div class="hero-media">
+        <div class="hero-avatar-card">
+          <div class="hero-avatar-halo" aria-hidden="true"></div>
+          <div class="hero-avatar-frame">
+            <img src="img/Christie.jpg" alt="Кристина — фотограф в Хургаде" class="hero-avatar-img" loading="eager" fetchpriority="high">
+          </div>
+          <div class="hero-avatar-badge">
+            <span class="hero-avatar-badge-dot"></span>
+            <span class="hero-avatar-badge-text">Кристина • 4 года в Хургаде</span>
+          </div>
+          <div class="hero-avatar-chip">
+            <i class="ri-sparkles-line"></i>
+            <span>Съёмки «под ключ»</span>
+          </div>
+        </div>
+      </div>
+
       <div class="hero-content">
         <div class="hero-badge">
           <i class="ri-map-pin-2-line"></i>
@@ -77,9 +97,14 @@
           <span class="hero-title-accent">на побережье Красного моря</span>
         </h1>
 
-        <p class="hero-subtitle">
-          Живые моменты вашего отдыха: море, пустыня, закатные утёсы. Помощь с позированием, подбор локаций и фиксация цены за результат.
-        </p>
+        <div class="hero-subtitle">
+          <p class="hero-lead">
+            Привет! Меня зовут <strong>Кристина</strong>. Я&nbsp;живу в&nbsp;Хургаде уже 4&nbsp;года и&nbsp;помогаю запечатлеть самые яркие и&nbsp;живые моменты вашего отпуска на&nbsp;побережье Красного моря.
+          </p>
+          <p class="hero-desc">
+            Организую вашу выездную фотосессию <em>«под ключ»</em>: помогу выбрать идеальную локацию, организую комфортный трансфер прямо из&nbsp;отеля и&nbsp;обратно, бережно подскажу удачные позы и&nbsp;помогу с&nbsp;образами. Всё пройдёт легко, непринуждённо и&nbsp;с&nbsp;удовольствием!
+          </p>
+        </div>
 
         <div class="hero-actions">
           <a href="#calculator" class="btn btn-primary">
@@ -94,6 +119,10 @@
           <div class="feature-item">
             <i class="ri-checkbox-circle-fill feature-icon"></i>
             <span>Помощь с позированием</span>
+          </div>
+          <div class="feature-item">
+            <i class="ri-checkbox-circle-fill feature-icon"></i>
+            <span>Трансфер из отеля</span>
           </div>
           <div class="feature-item">
             <i class="ri-checkbox-circle-fill feature-icon"></i>
