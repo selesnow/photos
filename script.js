@@ -126,12 +126,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const sumType = document.getElementById('sum-type');
   const sumLoc = document.getElementById('sum-loc');
+  const sumDate = document.getElementById('sum-date');
   const sumTransfer = document.getElementById('sum-transfer');
   const sumExtras = document.getElementById('sum-extras');
   const sumTime = document.getElementById('sum-time');
   const sumTotal = document.getElementById('sum-total');
   const btnTelegram = document.getElementById('btn-book-telegram');
   const btnWhatsapp = document.getElementById('btn-book-whatsapp');
+  const calcDate = document.getElementById('calc-date');
+  const calcDateClear = document.getElementById('calc-date-clear');
+  const calcDateWrap = document.querySelector('.calc-date-input-wrap');
+
+  // Минимальная доступная дата — завтрашний день (текущий и прошедшие дни заблокированы)
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
+
+  let fpDate = null;
+  if (typeof window.flatpickr === 'function' && calcDate) {
+    fpDate = window.flatpickr(calcDate, {
+      locale: window.flatpickr.l10ns?.ru || 'ru',
+      dateFormat: 'd.m.Y',
+      minDate: tomorrow,
+      disableMobile: true,
+      onChange: function() {
+        updateCalculator();
+      }
+    });
+  }
 
   const typeNames = {
     family: '👨‍👩‍👧‍👦 Семейная ($170)',
@@ -239,30 +261,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const total = basePrice + locPrice + transferPrice + extrasPrice;
 
+    // Дата съёмки
+    let dateSummaryText = 'Не выбрана';
+    let dateMsgText = 'Уточняется / по договорённости';
+    let dateClosingQuestion = 'Подскажите, свободны ли даты для съёмки?';
+
+    const selectedDateVal = calcDate ? calcDate.value.trim() : '';
+
+    if (selectedDateVal) {
+      dateSummaryText = selectedDateVal;
+      dateMsgText = selectedDateVal;
+      dateClosingQuestion = `Подскажите, свободна ли дата ${selectedDateVal} для съёмки?`;
+    }
+
+    if (calcDateClear) {
+      calcDateClear.style.display = selectedDateVal ? 'inline-flex' : 'none';
+    }
+
     // Обновление отображения в карточке Итога
     if (sumType) sumType.textContent = typeNames[selectedTypeKey] ? typeNames[selectedTypeKey].split(' (')[0] : 'Семейная';
     if (sumLoc) sumLoc.textContent = currentLoc.cleanName;
+    if (sumDate) sumDate.textContent = dateSummaryText;
     if (sumTransfer) sumTransfer.textContent = transferSummaryText;
     if (sumExtras) sumExtras.textContent = extrasList.length > 0 ? extrasList.join(', ') : 'Нет';
     if (sumTime) sumTime.textContent = readyDays;
     if (sumTotal) sumTotal.textContent = `$${total}`;
 
     // Формирование ссылки для Telegram и WhatsApp
-    const messageText = `Здравствуйте, Кристина! 👋%0A` +
-      `Хочу забронировать фотосессию в Египте:%0A` +
-      `• Вид съёмки: ${typeNames[selectedTypeKey]}%0A` +
-      `• Локация: ${currentLoc.name}%0A` +
-      `• Трансфер: ${transferMsgText}%0A` +
-      `• Доп. опции: ${extrasList.length > 0 ? extrasList.join(', ') : 'Без доп. опций'}%0A` +
-      `• Срок готовности: ${readyDays}%0A` +
-      `💰 Итоговая расчётная стоимость: $${total}%0A%0A` +
-      `Подскажите, свободны ли даты для съёмки?`;
+    const rawMessage = `Здравствуйте, Кристина! 👋\n` +
+      `Хочу забронировать фотосессию в Египте:\n` +
+      `• Вид съёмки: ${typeNames[selectedTypeKey]}\n` +
+      `• Локация: ${currentLoc.name}\n` +
+      `• Желаемая дата: ${dateMsgText}\n` +
+      `• Трансфер: ${transferMsgText}\n` +
+      `• Доп. опции: ${extrasList.length > 0 ? extrasList.join(', ') : 'Без доп. опций'}\n` +
+      `• Срок готовности: ${readyDays}\n` +
+      `💰 Итоговая расчётная стоимость: $${total}\n\n` +
+      `${dateClosingQuestion}`;
+
+    const encodedMessage = encodeURIComponent(rawMessage);
 
     if (btnTelegram) {
-      btnTelegram.href = `https://t.me/Kristina_Selesnova_photo?text=${messageText}`;
+      btnTelegram.href = `https://t.me/Kristina_Selesnova_photo?text=${encodedMessage}`;
     }
     if (btnWhatsapp) {
-      btnWhatsapp.href = `https://wa.me/380682552141?text=${messageText}`;
+      btnWhatsapp.href = `https://wa.me/380682552141?text=${encodedMessage}`;
     }
   }
 
@@ -289,6 +332,40 @@ document.addEventListener('DOMContentLoaded', () => {
     if (chk) chk.addEventListener('change', updateCalculator);
   });
 
+  // События выбора даты
+  if (calcDate) {
+    calcDate.addEventListener('change', updateCalculator);
+    calcDate.addEventListener('input', updateCalculator);
+    calcDate.addEventListener('click', () => {
+      if (fpDate) {
+        fpDate.open();
+      }
+    });
+  }
+
+  if (calcDateWrap) {
+    calcDateWrap.addEventListener('click', (e) => {
+      if (calcDateClear && (e.target === calcDateClear || calcDateClear.contains(e.target))) {
+        return;
+      }
+      if (fpDate) {
+        fpDate.open();
+      }
+    });
+  }
+
+  if (calcDateClear) {
+    calcDateClear.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (fpDate) {
+        fpDate.clear();
+      } else if (calcDate) {
+        calcDate.value = '';
+      }
+      updateCalculator();
+    });
+  }
+
   // Инициализация калькулятора при старте
   updateCalculator();
 
@@ -308,6 +385,62 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   };
+
+  /* --- 4.1. Аналитика GA4 (События бронирования и кликов по мессенджерам) --- */
+  function sendCalculatorBookingEvent(messenger) {
+    if (typeof window.gtag === 'function') {
+      const typeText = sumType ? sumType.textContent.trim() : '';
+      const locText = sumLoc ? sumLoc.textContent.trim() : '';
+      const dateText = (calcDate && calcDate.value.trim()) ? calcDate.value.trim() : 'не указана';
+      const totalText = sumTotal ? sumTotal.textContent.replace(/[^\d]/g, '') : '0';
+      const totalValue = parseInt(totalText, 10) || 0;
+
+      window.gtag('event', 'calculator_booking', {
+        messenger: messenger,
+        service_type: typeText,
+        service_location: locText,
+        booking_date: dateText,
+        value: totalValue,
+        currency: 'USD'
+      });
+    }
+  }
+
+  if (btnTelegram) {
+    btnTelegram.addEventListener('click', () => {
+      sendCalculatorBookingEvent('telegram');
+    });
+  }
+
+  if (btnWhatsapp) {
+    btnWhatsapp.addEventListener('click', () => {
+      sendCalculatorBookingEvent('whatsapp');
+    });
+  }
+
+  const floatingTelegram = document.getElementById('floating-btn-telegram');
+  const floatingWhatsapp = document.getElementById('floating-btn-whatsapp');
+
+  function sendFloatingMessengerEvent(messenger) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'floating_messenger_click', {
+        messenger: messenger,
+        placement: 'floating_bar'
+      });
+    }
+  }
+
+  if (floatingTelegram) {
+    floatingTelegram.addEventListener('click', () => {
+      sendFloatingMessengerEvent('telegram');
+    });
+  }
+
+  if (floatingWhatsapp) {
+    floatingWhatsapp.addEventListener('click', () => {
+      sendFloatingMessengerEvent('whatsapp');
+    });
+  }
 
   /* --- 5. Модальное окно просмотра фото (Lightbox) --- */
   const lightboxModal = document.getElementById('lightbox-modal');

@@ -33,6 +33,9 @@
   <!-- Swiper.js CSS CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   
+  <!-- Flatpickr CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  
   <!-- JS-feature flag для анимаций появления (защита от flash при отключённом JS) -->
   <script>document.documentElement.classList.replace('no-js','js');</script>
 
@@ -686,6 +689,21 @@
               </div>
             </label>
           </div>
+
+          <!-- Шаг 4 -->
+          <div class="calc-step-title calc-step-date-title">
+            <span class="step-num">4</span> <span>Желаемая дата фотосессии:</span>
+          </div>
+          <div class="calc-date-wrapper">
+            <div class="calc-date-input-wrap">
+              <i class="ri-calendar-line calc-date-icon"></i>
+              <input type="text" id="calc-date" class="calc-date-input" placeholder="Выберите дату (ДД.ММ.ГГГГ)" readonly aria-label="Желаемая дата фотосессии">
+              <button type="button" id="calc-date-clear" class="calc-date-clear-btn" title="Очистить дату" aria-label="Очистить дату" style="display: none;">
+                <i class="ri-close-line"></i>
+              </button>
+            </div>
+            <span class="calc-date-hint">Необязательно. Можно выбрать любую дату начиная с завтрашнего дня</span>
+          </div>
         </div>
 
         <!-- Итог -->
@@ -700,6 +718,10 @@
               <div class="summary-item">
                 <span>Локация:</span>
                 <strong id="sum-loc">Хургада Мамша</strong>
+              </div>
+              <div class="summary-item">
+                <span>Дата съёмки:</span>
+                <strong id="sum-date">Не выбрана</strong>
               </div>
               <div class="summary-item">
                 <span>Трансфер:</span>
@@ -872,10 +894,10 @@
 
   <!-- Плавающая мобильная панель -->
   <div class="floating-bar">
-    <a href="https://t.me/Kristina_Selesnova_photo" target="_blank" class="btn btn-telegram btn-sm">
+    <a href="https://t.me/Kristina_Selesnova_photo" target="_blank" class="btn btn-telegram btn-sm" id="floating-btn-telegram" aria-label="Связаться в Telegram">
       <i class="ri-telegram-fill"></i> Telegram
     </a>
-    <a href="https://wa.me/380682552141" target="_blank" class="btn btn-whatsapp btn-sm">
+    <a href="https://wa.me/380682552141" target="_blank" class="btn btn-whatsapp btn-sm" id="floating-btn-whatsapp" aria-label="Связаться в WhatsApp">
       <i class="ri-whatsapp-fill"></i> WhatsApp
     </a>
   </div>
@@ -937,6 +959,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
