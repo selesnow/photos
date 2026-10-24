@@ -111,6 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetTab === 'couple') coupleSwiper.update();
         if (targetTab === 'single') singleSwiper.update();
       }
+
+      // Отправка в GA4
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'portfolio_tab_switch', {
+          tab_name: targetTab
+        });
+      }
     });
   });
 
@@ -309,9 +316,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  let hasCalculatorStarted = false;
+  function trackCalculatorStart(source) {
+    if (!hasCalculatorStarted) {
+      hasCalculatorStarted = true;
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'calculator_start', {
+          trigger_source: source || 'interaction'
+        });
+      }
+    }
+  }
+
   // Клик по типам съёмки
   calcTypeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+      trackCalculatorStart('type_button');
       calcTypeBtns.forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       updateCalculator();
@@ -321,6 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Клик по локациям
   calcLocBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+      trackCalculatorStart('location_button');
       calcLocBtns.forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       updateCalculator();
@@ -329,13 +350,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Чекбоксы
   [optFast, optDress, optRaw, optTransfer].forEach(chk => {
-    if (chk) chk.addEventListener('change', updateCalculator);
+    if (chk) {
+      chk.addEventListener('change', () => {
+        trackCalculatorStart('addon_checkbox');
+        updateCalculator();
+      });
+    }
   });
 
   // События выбора даты
   if (calcDate) {
-    calcDate.addEventListener('change', updateCalculator);
-    calcDate.addEventListener('input', updateCalculator);
+    calcDate.addEventListener('change', () => {
+      trackCalculatorStart('date_picker');
+      updateCalculator();
+    });
+    calcDate.addEventListener('input', () => {
+      trackCalculatorStart('date_picker');
+      updateCalculator();
+    });
     calcDate.addEventListener('click', () => {
       if (fpDate) {
         fpDate.open();
@@ -371,6 +403,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Глобальная функция вызова калькулятора из карточек цен
   window.selectCalcType = function(typeName) {
+    trackCalculatorStart('package_card');
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'package_card_click', {
+        package_name: typeName
+      });
+    }
     calcTypeBtns.forEach(btn => {
       if (btn.getAttribute('data-type') === typeName) {
         btn.click();
@@ -442,6 +480,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Кнопки первого экрана (Hero CTA)
+  const heroBtnCalc = document.getElementById('hero-btn-calc');
+  const heroBtnPortfolio = document.getElementById('hero-btn-portfolio');
+
+  if (heroBtnCalc) {
+    heroBtnCalc.addEventListener('click', () => {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'hero_cta_click', {
+          button_name: 'calculator'
+        });
+      }
+    });
+  }
+
+  if (heroBtnPortfolio) {
+    heroBtnPortfolio.addEventListener('click', () => {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'hero_cta_click', {
+          button_name: 'portfolio'
+        });
+      }
+    });
+  }
+
+  // Клик по соцсетям в футере
+  document.querySelectorAll('.footer-socials .social-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const network = btn.getAttribute('data-social') || btn.getAttribute('aria-label') || 'other';
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'social_click', {
+          network: network.toLowerCase(),
+          placement: 'footer',
+          target_url: btn.href
+        });
+      }
+    });
+  });
+
   /* --- 5. Модальное окно просмотра фото (Lightbox) --- */
   const lightboxModal = document.getElementById('lightbox-modal');
   const lightboxImg = document.getElementById('lightbox-img');
@@ -503,6 +579,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     preloadLightboxNeighbor(1);
     preloadLightboxNeighbor(-1);
+
+    // Отправка события в GA4 для каждого просмотренного фото (включая листание стрелками)
+    if (typeof window.gtag === 'function' && item.src) {
+      const cleanName = item.src.replace(/^img\//, '');
+      window.gtag('event', 'lightbox_photo_view', {
+        photo_src: item.src,
+        photo_name: cleanName,
+        photo_type: item.type || 'portfolio',
+        photo_caption: item.text || 'Фотография',
+        photo_index: lightboxIndex + 1,
+        total_photos: lightboxCollection.length
+      });
+    }
   }
 
   function navigateLightbox(delta) {
@@ -641,6 +730,13 @@ document.addEventListener('DOMContentLoaded', () => {
     videoModal.classList.add('active');
     videoModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+
+    // Отправка в GA4
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'location_video_view', {
+        location_name: title || 'Локация'
+      });
+    }
   }
 
   function closeVideoModal() {
@@ -655,6 +751,18 @@ document.addEventListener('DOMContentLoaded', () => {
     videoModalIframe.addEventListener('load', () => {
       if (videoModalIframe.src && videoModalIframe.src !== 'about:blank' && !videoModalIframe.src.endsWith('about:blank')) {
         videoLoader.style.display = 'none';
+      }
+    });
+  }
+
+  if (videoModalExternal) {
+    videoModalExternal.addEventListener('click', () => {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'social_click', {
+          network: 'instagram',
+          placement: 'video_modal',
+          target_url: videoModalExternal.href
+        });
       }
     });
   }
@@ -689,6 +797,14 @@ document.addEventListener('DOMContentLoaded', () => {
       faqItems.forEach(i => i.classList.remove('active'));
       if (!isActive) {
         item.classList.add('active');
+
+        // Отправка в GA4
+        if (typeof window.gtag === 'function') {
+          const qSpan = question.querySelector('span');
+          window.gtag('event', 'faq_open', {
+            question_title: qSpan ? qSpan.textContent.trim() : 'Вопрос'
+          });
+        }
       }
     });
   });
