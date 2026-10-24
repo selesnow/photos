@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FFC3HRMXXG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-FFC3HRMXXG');
+    gtag('event', 'page_not_found', { page_path: location.pathname });
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Страница не найдена — Christina-Hurghada.Photos</title>
+  <meta name="robots" content="noindex, follow">
+
+  <!-- Favicon (абсолютные пути: 404 отдаётся по любому адресу) -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=2.0">
+
+  <style>
+    .notfound {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.25rem;
+    }
+    .notfound-code {
+      font-size: clamp(5rem, 18vw, 9rem);
+      font-weight: 700;
+      line-height: 1;
+      color: var(--accent-gold);
+      text-shadow: 0 0 40px var(--accent-gold-glow);
+      margin-bottom: 1rem;
+    }
+    .notfound .logo {
+      display: inline-block;
+      margin-bottom: 2.5rem;
+    }
+    .notfound .section-desc {
+      margin: 0 auto 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
+  <main class="notfound">
+    <div class="container">
+      <a href="/" class="logo">
+        Christina-Hurghada<span class="logo-accent">.Photos</span>
+      </a>
+      <div class="notfound-code">404</div>
+      <h1 class="section-title">Страница не найдена</h1>
+      <p class="section-desc">Возможно, ссылка устарела или в адресе опечатка. Всё самое красивое — на главной.</p>
+      <a href="/" class="btn btn-primary">
+        <i class="ri-home-4-line"></i> На главную
+      </a>
+    </div>
+  </main>
+
+</body>
+</html>

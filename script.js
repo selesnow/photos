@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     family: '👨‍👩‍👧‍👦 Семейная ($170)',
     couple: '💑 Парная ($150)',
     single: '✨ Индивидуальная ($150)',
-    dress: '👗🪽 Летящее платье ($150)'
+    dress: '👗 Летящее платье ($150)'
   };
 
   const locConfig = {
