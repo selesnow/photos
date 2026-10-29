@@ -1,0 +1,20 @@
+name = "tg-chat"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+preview_urls = false
+
+[vars]
+# ID приватной группы «Фотосессии», куда бот пересылает сообщения с сайта
+CHAT_ID = "-1003973457850"
+# Имя, которым подписаны ответы в окне чата на сайте
+OPERATOR_NAME = "Кристина"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "chat-db"
+database_id = "df500de7-3ae1-48fb-89bb-1428986d7183"
+
+# Секреты (не хранятся в репозитории), задаются через `wrangler secret put`:
+#   BOT_TOKEN       — токен Telegram-бота
+#   WEBHOOK_SECRET  — случайная строка, которой Telegram подписывает webhook

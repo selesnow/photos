@@ -54,7 +54,11 @@ dims <- list(
   list(param = "network", name = "Социальная сеть", desc = "Кликнутая соцсеть: instagram, telegram, whatsapp"),
   list(param = "placement", name = "Размещение элемента", desc = "Место клика (floating_bar, footer, video_modal)"),
   list(param = "target_url", name = "Целевой URL", desc = "Внешняя ссылка перехода"),
-  list(param = "question_title", name = "Вопрос FAQ", desc = "Заголовок раскрытого вопроса в аккордеоне FAQ")
+  list(param = "question_title", name = "Вопрос FAQ", desc = "Заголовок раскрытого вопроса в аккордеоне FAQ"),
+  list(param = "chat_contacts", name = "Контакты в анкете чата", desc = "Какие контакты указал посетитель в анкете чата: instagram, telegram, whatsapp (сами контакты не передаются)"),
+  list(param = "chat_has_history", name = "Чат есть переписка", desc = "При открытии чата: yes — посетитель уже писал раньше, no — впервые"),
+  list(param = "with_brief", name = "Чат первое сообщение с анкетой", desc = "Первое обращение в чат пришло через анкету (yes) или обычным текстом (no)"),
+  list(param = "error_type", name = "Тип ошибки чата", desc = "Причина ошибки отправки в чате: send_failed, rate_limited")
 )
 
 message("\n=== Создание специальных параметров (Custom Dimensions) ===")
@@ -109,7 +113,10 @@ message(sprintf("\nСуществующих пользовательских п�
 
 metrics_list <- list(
   list(param = "photo_index", name = "Номер фото в просмотре", desc = "Порядковый номер фото в галерее Lightbox", unit = "STANDARD"),
-  list(param = "total_photos", name = "Всего фото в галерее", desc = "Общее число фото в открытой категории", unit = "STANDARD")
+  list(param = "total_photos", name = "Всего фото в галерее", desc = "Общее число фото в открытой категории", unit = "STANDARD"),
+  list(param = "message_index", name = "Чат номер сообщения", desc = "Порядковый номер отправленного сообщения посетителя в чате", unit = "STANDARD"),
+  list(param = "contact_count", name = "Чат число контактов в анкете", desc = "Сколько контактов (Instagram/Telegram/WhatsApp) указано в анкете", unit = "STANDARD"),
+  list(param = "brief_fields", name = "Чат заполнено полей анкеты", desc = "Сколько из 6 полей анкеты (тип, локация, дата, 3 контакта) заполнено", unit = "STANDARD")
 )
 
 message("\n=== Создание специальных показателей (Custom Metrics) ===")
@@ -146,6 +153,37 @@ for (m in metrics_list) {
   } else {
     err_msg <- content(post_resp, as = "text", encoding = "UTF-8")
     message(sprintf("  [ОШИБКА] %s: %s", m$param, err_msg))
+  }
+  Sys.sleep(0.3)
+}
+
+# --- 3. Ключевые события (Key Events / конверсии) ---
+url_key <- sprintf("https://analyticsadmin.googleapis.com/v1beta/properties/%s/keyEvents", property_id)
+resp_key <- GET(url_key, add_headers(Authorization = paste("Bearer", token_str)))
+existing_keys <- character(0)
+if (status_code(resp_key) == 200) {
+  content_key <- fromJSON(content(resp_key, as = "text", encoding = "UTF-8"))
+  if (!is.null(content_key$keyEvents) && length(content_key$keyEvents$eventName) > 0) {
+    existing_keys <- content_key$keyEvents$eventName
+  }
+}
+
+message("
+=== Создание ключевых событий (Key Events) ===")
+for (ev in c("chat_first_message", "chat_brief_submit")) {
+  if (ev %in% existing_keys) {
+    message(sprintf("  [ПРОПУСК] Уже ключевое: %s", ev))
+    next
+  }
+  post_resp <- POST(
+    url_key,
+    add_headers(Authorization = paste("Bearer", token_str), "Content-Type" = "application/json; charset=utf-8"),
+    body = toJSON(list(eventName = ev, countingMethod = "ONCE_PER_EVENT"), auto_unbox = TRUE)
+  )
+  if (status_code(post_resp) %in% c(200, 201)) {
+    message(sprintf("  [СОЗДАН] %s", ev))
+  } else {
+    message(sprintf("  [ОШИБКА] %s: %s", ev, content(post_resp, as = "text", encoding = "UTF-8")))
   }
   Sys.sleep(0.3)
 }
