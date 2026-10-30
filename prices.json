@@ -1,21 +1,21 @@
 {
   "currency": "USD",
   "types": {
-    "family": { "name": "Семейная", "price": 170 },
-    "couple": { "name": "Парная (Love Story)", "price": 150 },
-    "single": { "name": "Индивидуальная", "price": 150 },
-    "dress": { "name": "Летящее платье", "price": 150, "dress_included_at": ["desert"] }
+    "family": { "name": "Семейная", "emoji": "👨‍👩‍👧‍👦", "price": 170 },
+    "couple": { "name": "Парная (Love Story)", "emoji": "💑", "price": 150 },
+    "single": { "name": "Индивидуальная", "emoji": "✨", "price": 150 },
+    "dress": { "name": "Летящее платье", "emoji": "👗", "price": 150, "dress_included_at": ["desert"] }
   },
   "locations": {
-    "hurghada": { "name": "Хургада Мамша", "surcharge": 0, "transfer": 30 },
-    "desert": { "name": "Пустыня", "surcharge": 0, "transfer": 30 },
-    "cliff": { "name": "Утёс", "surcharge": 0, "transfer": 40 },
-    "sea_desert": { "name": "Море + Пустыня", "surcharge": 0, "transfer": 40 },
-    "el_gouna": { "name": "Эль-Гуна", "surcharge": 30, "transfer": 40 }
+    "hurghada": { "name": "Хургада Мамша", "emoji": "🌴", "photo_name": "Хургада (Мамша)", "aliases": ["мамш", "хургад"], "surcharge": 0, "transfer": 30 },
+    "desert": { "name": "Пустыня", "emoji": "🏜", "photo_name": "Пустыня", "aliases": ["пустын"], "surcharge": 0, "transfer": 30 },
+    "el_gouna": { "name": "Эль-Гуна", "emoji": "🌴", "photo_name": "Эль-Гуна", "aliases": ["гун"], "surcharge": 30, "transfer": 40 },
+    "cliff": { "name": "Утёс", "emoji": "🌅", "photo_name": "Утёс", "aliases": ["утес", "сафаг", "скал"], "surcharge": 0, "transfer": 40 },
+    "sea_desert": { "name": "Море + Пустыня", "emoji": "🌊", "photo_name": "Море + Пустыня", "aliases": ["море + пустын", "море и пустын", "море пустын", "sea + desert", "sea desert"], "surcharge": 0, "transfer": 40 }
   },
   "extras": {
-    "fast": { "name": "Быстрая обработка (2-3 дня)", "price": 40 },
-    "dress": { "name": "Аренда доп. платья / образа", "price": 40 },
-    "raw": { "name": "Все исходники снимков", "price": 30 }
+    "fast": { "name": "Быстрая обработка (2-3 дня)", "emoji": "🚀", "price": 40 },
+    "dress": { "name": "Аренда доп. платья / образа", "emoji": "👗", "price": 40 },
+    "raw": { "name": "Все исходники снимков", "emoji": "💾", "price": 30 }
   }
 }

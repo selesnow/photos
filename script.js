@@ -124,9 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
   /* --- 4. Интерактивный Калькулятор Стоимости --- */
   const calcTypeBtns = document.querySelectorAll('#calc-type-grid .calc-option-btn');
   const calcLocBtns = document.querySelectorAll('#calc-loc-grid .calc-option-btn');
-  const optFast = document.getElementById('opt-fast');
-  const optDress = document.getElementById('opt-dress');
-  const optRaw = document.getElementById('opt-raw');
+  // Доп. услуги: любой чекбокс с data-extra (цена в value, подпись в data-label, срок в data-ready)
+  const extraInputs = Array.from(document.querySelectorAll('input[data-extra]'));
+  const extraDress = extraInputs.find(el => el.getAttribute('data-extra') === 'dress');
   const optTransfer = document.getElementById('opt-transfer');
   const calcTransferPrice = document.getElementById('calc-transfer-price');
   const transferLocNote = document.getElementById('transfer-loc-note');
@@ -162,22 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Цены не хранятся в JS: их выставляет .github/scripts/apply_prices.py из prices.json
-  // в data-атрибуты кнопок. Здесь только названия.
-  const typeLabels = {
-    family: '👨‍👩‍👧‍👦 Семейная',
-    couple: '💑 Парная',
-    single: '✨ Индивидуальная',
-    dress: '👗 Летящее платье'
-  };
-
-  const locLabels = {
-    hurghada: { name: '🌴 Хургада Мамша', cleanName: 'Хургада Мамша' },
-    desert: { name: '🏜 Пустыня', cleanName: 'Пустыня' },
-    cliff: { name: '🌅 Утёс', cleanName: 'Утёс' },
-    sea_desert: { name: '🌊 Море + Пустыня', cleanName: 'Море + Пустыня' },
-    el_gouna: { name: '🌴 Эль-Гуна', cleanName: 'Эль-Гуна' }
-  };
+  // В JS нет ни цен, ни названий: цены выставляет .github/scripts/apply_prices.py из prices.json
+  // (data-price, data-transfer, data-dress-free), подписи для сообщения лежат в разметке (data-label,
+  // data-clean). Новый тип, локация или услуга добавляются разметкой и prices.json, без правок здесь.
+  const labelOf = (el) => el.getAttribute('data-label')
+    || (el.querySelector('.calc-opt-name') ? el.querySelector('.calc-opt-name').textContent.trim() : '');
 
   const typeNames = {};
   const typeInfo = {};
@@ -187,17 +176,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Типы с data-dress-free включают одно платье только на перечисленных локациях
     const dressFree = (btn.getAttribute('data-dress-free') || '').split(',').filter(Boolean);
     typeInfo[key] = { price, includesDress: btn.hasAttribute('data-dress-free'), dressFree };
-    typeNames[key] = `${typeLabels[key] || key} ($${price})`;
+    typeNames[key] = `${labelOf(btn)} ($${price})`;
   });
 
   const locConfig = {};
   calcLocBtns.forEach(btn => {
     const key = btn.getAttribute('data-loc');
     const price = parseInt(btn.getAttribute('data-price'), 10) || 0;
-    const label = locLabels[key] || { name: key, cleanName: key };
+    const label = labelOf(btn);
     locConfig[key] = {
-      name: price > 0 ? `${label.name} (+$${price})` : label.name,
-      cleanName: label.cleanName,
+      name: price > 0 ? `${label} (+$${price})` : label,
+      cleanName: btn.getAttribute('data-clean') || label,
       transfer: parseInt(btn.getAttribute('data-transfer'), 10) || 0,
       price
     };
@@ -205,8 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateCalculator() {
     let basePrice = 0;
-    let selectedTypeKey = 'family';
-    let selectedLocKey = 'hurghada';
+    let selectedTypeKey = Object.keys(typeInfo)[0];
+    let selectedLocKey = Object.keys(locConfig)[0];
     let extrasPrice = 0;
     let extrasList = [];
     let readyDays = '14 дней';
@@ -226,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    const currentLoc = locConfig[selectedLocKey] || locConfig.hurghada;
+    const currentLoc = locConfig[selectedLocKey] || locConfig[Object.keys(locConfig)[0]];
     const locPrice = currentLoc.price;
     const transferCost = currentLoc.transfer;
 
@@ -255,25 +244,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Пакет с платьем включает одно платье только на «своих» локациях (в пустыне),
     // на остальных аренда платья оплачивается по цене доп. платья
     const typeData = typeInfo[selectedTypeKey];
-    if (typeData && typeData.includesDress && !typeData.dressFree.includes(selectedLocKey) && optDress) {
-      extrasPrice += parseInt(optDress.value, 10) || 0;
+    if (typeData && typeData.includesDress && !typeData.dressFree.includes(selectedLocKey) && extraDress) {
+      extrasPrice += parseInt(extraDress.value, 10) || 0;
       extrasList.push('👗 Аренда платья');
     }
 
-    // Дополнительные опции
-    if (optFast && optFast.checked) {
-      extrasPrice += parseInt(optFast.value);
-      extrasList.push('🚀 Быстрая обработка 2-3 дня');
-      readyDays = '2-3 дня';
-    }
-    if (optDress && optDress.checked) {
-      extrasPrice += parseInt(optDress.value);
-      extrasList.push('👗 Аренда доп. платья');
-    }
-    if (optRaw && optRaw.checked) {
-      extrasPrice += parseInt(optRaw.value);
-      extrasList.push('💾 Все исходники');
-    }
+    // Дополнительные опции (любой чекбокс data-extra)
+    extraInputs.forEach(chk => {
+      if (!chk.checked) return;
+      extrasPrice += parseInt(chk.value, 10) || 0;
+      extrasList.push(labelOf(chk));
+      if (chk.getAttribute('data-ready')) readyDays = chk.getAttribute('data-ready');
+    });
 
     const total = basePrice + locPrice + transferPrice + extrasPrice;
 
@@ -358,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Чекбоксы
-  [optFast, optDress, optRaw, optTransfer].forEach(chk => {
+  [...extraInputs, optTransfer].forEach(chk => {
     if (chk) {
       chk.addEventListener('change', () => {
         trackCalculatorStart('addon_checkbox');

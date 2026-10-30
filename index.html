@@ -87,6 +87,7 @@
               "@type": "Offer",
               "price": "170",
               "priceCurrency": "USD",
+              "sku": "type:family",
               "itemOffered": {
                 "@type": "Service",
                 "name": "Семейная фотосессия",
@@ -97,6 +98,7 @@
               "@type": "Offer",
               "price": "150",
               "priceCurrency": "USD",
+              "sku": "type:couple",
               "itemOffered": {
                 "@type": "Service",
                 "name": "Парная фотосессия (Love Story)",
@@ -107,6 +109,7 @@
               "@type": "Offer",
               "price": "150",
               "priceCurrency": "USD",
+              "sku": "type:single",
               "itemOffered": {
                 "@type": "Service",
                 "name": "Индивидуальная фотосессия",
@@ -117,6 +120,7 @@
               "@type": "Offer",
               "price": "150",
               "priceCurrency": "USD",
+              "sku": "type:dress",
               "itemOffered": {
                 "@type": "Service",
                 "name": "Фотосессия в летящем платье в пустыне",
@@ -426,12 +430,12 @@
 
       <div class="packages-grid">
         <!-- Пакет 1: Семейная -->
-        <div class="package-card" data-reveal>
+        <div class="package-card" data-type="family" data-reveal>
           <div class="package-header">
             <span class="package-icon">👨‍👩‍👧‍👦</span>
             <h3 class="package-title">Семейная</h3>
             <div class="package-price-wrap">
-              <span class="package-price">$170</span>
+              <span class="package-price" data-p="types.family.price">$170</span>
               <span class="package-price-period">/ за съёмку</span>
             </div>
             <p class="package-desc">Для семей, которые хотят сохранить тёплые и живые моменты отпуска на память.</p>
@@ -446,13 +450,13 @@
         </div>
 
         <!-- Пакет 2: Парная (Featured) -->
-        <div class="package-card featured" data-reveal>
+        <div class="package-card featured" data-type="couple" data-reveal>
           <span class="package-badge">Популярный выбор</span>
           <div class="package-header">
             <span class="package-icon">❤️</span>
             <h3 class="package-title">Парная</h3>
             <div class="package-price-wrap">
-              <span class="package-price">$150</span>
+              <span class="package-price" data-p="types.couple.price">$150</span>
               <span class="package-price-period">/ за съёмку</span>
             </div>
             <p class="package-desc">Love Story для влюблённых и супружеских пар на берегу моря или заката.</p>
@@ -467,12 +471,12 @@
         </div>
 
         <!-- Пакет 3: Индивидуальная -->
-        <div class="package-card" data-reveal>
+        <div class="package-card" data-type="single" data-reveal>
           <div class="package-header">
             <span class="package-icon">✨</span>
             <h3 class="package-title">Индивидуальная</h3>
             <div class="package-price-wrap">
-              <span class="package-price">$150</span>
+              <span class="package-price" data-p="types.single.price">$150</span>
               <span class="package-price-period">/ за съёмку</span>
             </div>
             <p class="package-desc">Персональная съёмка для себя — портреты на море, в пустыне или на каменистом утёсе.</p>
@@ -487,12 +491,12 @@
         </div>
 
         <!-- Пакет 4: Летящие платья -->
-        <div class="package-card" data-reveal>
+        <div class="package-card" data-type="dress" data-reveal>
           <div class="package-header">
             <span class="package-icon">👗</span>
             <h3 class="package-title">Летящие платья</h3>
             <div class="package-price-wrap">
-              <span class="package-price">$150</span>
+              <span class="package-price" data-p="types.dress.price">$150</span>
               <span class="package-price-period">/ спец-предложение</span>
             </div>
             <p class="package-desc">Сказочная съёмка в пустыне на закате. 1 летящее платье на выбор уже входит в стоимость!</p>
@@ -520,7 +524,7 @@
 
       <div class="locations-grid">
         <!-- 1. Хургада (Mamsha) -->
-        <div class="location-card" data-reveal>
+        <div class="location-card" data-loc="hurghada" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/mamsha/2.webp">
               <img src="img/mamsha/thumb/2.webp" alt="Хургада Mamsha 2" loading="lazy">
@@ -536,7 +540,7 @@
             <div class="location-thumb" data-full="img/mamsha/8.webp"><img src="img/mamsha/thumb/8.webp" alt="Хургада Mamsha 8" loading="lazy"></div>
           </div>
           <div class="location-content">
-            <span class="location-tag">🌴 Городская локация</span>
+            <span class="location-tag">🌴 Городская локация<span data-p="locations.hurghada.surcharge" data-pf="tag"></span></span>
             <h3 class="location-name">Хургада (Mamsha)</h3>
             <p class="location-desc">Красивая променада в центре Хургады. Отличный вариант без долгих поездок — пальмовые аллеи и морской бриз.</p>
             <div class="location-actions">
@@ -552,7 +556,7 @@
         </div>
 
         <!-- 2. Эль-Гуна -->
-        <div class="location-card" data-reveal>
+        <div class="location-card" data-loc="el_gouna" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/el_gouna/7.webp">
               <img src="img/el_gouna/thumb/7.webp" alt="Эль-Гуна 7" loading="lazy">
@@ -568,7 +572,7 @@
             <div class="location-thumb" data-full="img/el_gouna/11.webp"><img src="img/el_gouna/thumb/11.webp" alt="Эль-Гуна 11" loading="lazy"></div>
           </div>
           <div class="location-content">
-            <span class="location-tag">🌴 Египетская Венеция (+$30)</span>
+            <span class="location-tag">🌴 Египетская Венеция<span data-p="locations.el_gouna.surcharge" data-pf="tag"> (+$30)</span></span>
             <h3 class="location-name">Эль-Гу́на</h3>
             <p class="location-desc">Курортный закрытый город с лагунами и европейской архитектурой. Требует дополнительной организации поездки.</p>
             <div class="location-actions">
@@ -584,7 +588,7 @@
         </div>
 
         <!-- 3. Пустыня -->
-        <div class="location-card" data-reveal>
+        <div class="location-card" data-loc="desert" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/desert/3.webp">
               <img src="img/desert/thumb/3.webp" alt="Пустыня 3" loading="lazy">
@@ -600,7 +604,7 @@
             <div class="location-thumb" data-full="img/desert/12.webp"><img src="img/desert/thumb/12.webp" alt="Пустыня 12" loading="lazy"></div>
           </div>
           <div class="location-content">
-            <span class="location-tag">🏜 Магия Заката</span>
+            <span class="location-tag">🏜 Магия Заката<span data-p="locations.desert.surcharge" data-pf="tag"></span></span>
             <h3 class="location-name">Бескрайняя Пустыня</h3>
             <p class="location-desc">Золотистые пески, дюны и мягкий закатный свет. Идеальное место для кадров в летящих платьях.</p>
             <div class="location-actions">
@@ -616,7 +620,7 @@
         </div>
 
         <!-- 4. Утёс (Sofaga) -->
-        <div class="location-card" data-reveal>
+        <div class="location-card" data-loc="cliff" data-reveal>
           <div class="location-gallery-thumbs">
             <div class="location-thumb main" data-full="img/sofaga/5.webp">
               <img src="img/sofaga/thumb/5.webp" alt="Утёс Safaga 5" loading="lazy">
@@ -632,7 +636,7 @@
             <div class="location-thumb" data-full="img/sofaga/9.webp"><img src="img/sofaga/thumb/9.webp" alt="Утёс Safaga 9" loading="lazy"></div>
           </div>
           <div class="location-content">
-            <span class="location-tag">🌅 Закатный Вид</span>
+            <span class="location-tag">🌅 Закатный Вид<span data-p="locations.cliff.surcharge" data-pf="tag"></span></span>
             <h3 class="location-name">Утёс (Сафага)</h3>
             <p class="location-desc">Каменистый берег, высокие скалы и открытое море. Во время заката всё окрашивается в тёплые золотые оттенки.</p>
             <div class="location-actions">
@@ -648,7 +652,7 @@
         </div>
 
         <!-- 5. Море + Пустыня -->
-        <div class="location-card" data-reveal>
+        <div class="location-card" data-loc="sea_desert" data-reveal>
           <div class="location-gallery-thumbs thumbs-4">
             <div class="location-thumb main" data-full="img/sofaga_sea/22.webp">
               <img src="img/sofaga_sea/thumb/22.webp" alt="Море и Пустыня 22" loading="lazy">
@@ -665,7 +669,7 @@
             <div class="location-thumb" data-full="img/sofaga_sea/3.webp"><img src="img/sofaga_sea/thumb/3.webp" alt="Море и Пустыня 3" loading="lazy"></div>
           </div>
           <div class="location-content">
-            <span class="location-tag">🌊 2-в-1 Формат</span>
+            <span class="location-tag">🌊 2-в-1 Формат<span data-p="locations.sea_desert.surcharge" data-pf="tag"></span></span>
             <h3 class="location-name">Море + Пустыня</h3>
             <p class="location-desc">Комбинированная съёмка: вы получаете и морские кадры на побережье, и снимки в пустыне за один день.</p>
             <div class="location-actions">
@@ -763,21 +767,21 @@
             <span class="step-num">1</span> <span>Выберите тип фотосессии:</span>
           </div>
           <div class="calc-options-grid" id="calc-type-grid">
-            <button class="calc-option-btn selected" data-type="family" data-price="170">
+            <button class="calc-option-btn selected" data-type="family" data-price="170" data-label="👨‍👩‍👧‍👦 Семейная">
               <span class="calc-opt-name">👨‍👩‍👧‍👦 Семейная</span>
-              <span class="calc-opt-price">$170</span>
+              <span class="calc-opt-price" data-p="types.family.price">$170</span>
             </button>
-            <button class="calc-option-btn" data-type="couple" data-price="150">
+            <button class="calc-option-btn" data-type="couple" data-price="150" data-label="💑 Парная">
               <span class="calc-opt-name">💑 Парная (Love Story)</span>
-              <span class="calc-opt-price">$150</span>
+              <span class="calc-opt-price" data-p="types.couple.price">$150</span>
             </button>
-            <button class="calc-option-btn" data-type="single" data-price="150">
+            <button class="calc-option-btn" data-type="single" data-price="150" data-label="✨ Индивидуальная">
               <span class="calc-opt-name">✨ Индивидуальная</span>
-              <span class="calc-opt-price">$150</span>
+              <span class="calc-opt-price" data-p="types.single.price">$150</span>
             </button>
-            <button class="calc-option-btn" data-type="dress" data-price="150" data-dress-free="desert">
+            <button class="calc-option-btn" data-type="dress" data-price="150" data-dress-free="desert" data-label="👗 Летящее платье">
               <span class="calc-opt-name">👗 Летящее платье</span>
-              <span class="calc-opt-price">$150</span>
+              <span class="calc-opt-price" data-p="types.dress.price">$150</span>
             </button>
           </div>
 
@@ -786,30 +790,30 @@
             <span class="step-num">2</span> <span>Выберите локацию:</span>
           </div>
           <div class="calc-options-grid" id="calc-loc-grid">
-            <button class="calc-option-btn selected" data-loc="hurghada" data-price="0" data-transfer="30">
+            <button class="calc-option-btn selected" data-loc="hurghada" data-price="0" data-transfer="30" data-label="🌴 Хургада Мамша" data-clean="Хургада Мамша">
               <span class="calc-opt-name">🌴 Хургада Мамша</span>
-              <span class="calc-opt-price">+$0</span>
-              <span class="calc-opt-sub">🚗 трансфер: $30</span>
+              <span class="calc-opt-price" data-p="locations.hurghada.surcharge" data-pf="plus">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: <span data-p="locations.hurghada.transfer">$30</span></span>
             </button>
-            <button class="calc-option-btn" data-loc="desert" data-price="0" data-transfer="30">
+            <button class="calc-option-btn" data-loc="desert" data-price="0" data-transfer="30" data-label="🏜 Пустыня" data-clean="Пустыня">
               <span class="calc-opt-name">🏜 Пустыня</span>
-              <span class="calc-opt-price">+$0</span>
-              <span class="calc-opt-sub">🚗 трансфер: $30</span>
+              <span class="calc-opt-price" data-p="locations.desert.surcharge" data-pf="plus">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: <span data-p="locations.desert.transfer">$30</span></span>
             </button>
-            <button class="calc-option-btn" data-loc="cliff" data-price="0" data-transfer="40">
+            <button class="calc-option-btn" data-loc="cliff" data-price="0" data-transfer="40" data-label="🌅 Утёс" data-clean="Утёс">
               <span class="calc-opt-name">🌅 Утёс</span>
-              <span class="calc-opt-price">+$0</span>
-              <span class="calc-opt-sub">🚗 трансфер: $40</span>
+              <span class="calc-opt-price" data-p="locations.cliff.surcharge" data-pf="plus">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: <span data-p="locations.cliff.transfer">$40</span></span>
             </button>
-            <button class="calc-option-btn" data-loc="sea_desert" data-price="0" data-transfer="40">
+            <button class="calc-option-btn" data-loc="sea_desert" data-price="0" data-transfer="40" data-label="🌊 Море + Пустыня" data-clean="Море + Пустыня">
               <span class="calc-opt-name">🌊 Море + Пустыня</span>
-              <span class="calc-opt-price">+$0</span>
-              <span class="calc-opt-sub">🚗 трансфер: $40</span>
+              <span class="calc-opt-price" data-p="locations.sea_desert.surcharge" data-pf="plus">+$0</span>
+              <span class="calc-opt-sub">🚗 трансфер: <span data-p="locations.sea_desert.transfer">$40</span></span>
             </button>
-            <button class="calc-option-btn" data-loc="el_gouna" data-price="30" data-transfer="40">
+            <button class="calc-option-btn" data-loc="el_gouna" data-price="30" data-transfer="40" data-label="🌴 Эль-Гуна" data-clean="Эль-Гуна">
               <span class="calc-opt-name">🌴 Эль-Гуна</span>
-              <span class="calc-opt-price">+$30</span>
-              <span class="calc-opt-sub">🚗 трансфер: $40</span>
+              <span class="calc-opt-price" data-p="locations.el_gouna.surcharge" data-pf="plus">+$30</span>
+              <span class="calc-opt-sub">🚗 трансфер: <span data-p="locations.el_gouna.transfer">$40</span></span>
             </button>
           </div>
 
@@ -821,22 +825,22 @@
             <label class="calc-checkbox-label">
               <span>🚀 Быстрая обработка (2-3 дня)</span>
               <div style="display:flex; align-items:center; gap:0.6rem;">
-                <span class="calc-opt-price">+$40</span>
-                <input type="checkbox" id="opt-fast" value="40">
+                <span class="calc-opt-price" data-p="extras.fast.price" data-pf="plus">+$40</span>
+                <input type="checkbox" id="opt-fast" value="40" data-extra="fast" data-label="🚀 Быстрая обработка 2-3 дня" data-ready="2-3 дня">
               </div>
             </label>
             <label class="calc-checkbox-label">
               <span>👗 Аренда доп. платья / образа</span>
               <div style="display:flex; align-items:center; gap:0.6rem;">
-                <span class="calc-opt-price">+$40</span>
-                <input type="checkbox" id="opt-dress" value="40">
+                <span class="calc-opt-price" data-p="extras.dress.price" data-pf="plus">+$40</span>
+                <input type="checkbox" id="opt-dress" value="40" data-extra="dress" data-label="👗 Аренда доп. платья">
               </div>
             </label>
             <label class="calc-checkbox-label">
               <span>💾 Все исходники снимков</span>
               <div style="display:flex; align-items:center; gap:0.6rem;">
-                <span class="calc-opt-price">+$30</span>
-                <input type="checkbox" id="opt-raw" value="30">
+                <span class="calc-opt-price" data-p="extras.raw.price" data-pf="plus">+$30</span>
+                <input type="checkbox" id="opt-raw" value="30" data-extra="raw" data-label="💾 Все исходники">
               </div>
             </label>
             <label class="calc-checkbox-label" id="calc-transfer-label">
@@ -990,7 +994,7 @@
             <i class="ri-add-line faq-icon"></i>
           </button>
           <div class="faq-answer">
-            Вы можете приехать на своем такси/авто, либо мы организуем комфортный индивидуальный трансфер от вашего отеля. Стоимость трансфера зависит от локации: Хургада Мамша — $30, Пустыня — $30, Эль-Гуна — $40, Утёс — $40, Море + Пустыня — $40.
+            Вы можете приехать на своем такси/авто, либо мы организуем комфортный индивидуальный трансфер от вашего отеля. Стоимость трансфера зависит от локации: <span data-p-list="transfers">Хургада Мамша — $30, Пустыня — $30, Эль-Гуна — $40, Утёс — $40, Море + Пустыня — $40</span>.
           </div>
         </div>
 
@@ -1000,7 +1004,7 @@
             <i class="ri-add-line faq-icon"></i>
           </button>
           <div class="faq-answer">
-            Аренда 1 летящего платья на ваш выбор входит в стоимость ($150) только при съёмке на локации «Пустыня». Дополнительное платье для съёмки в пустыне, либо аренда платья при фотосессии на любых других локациях (Хургада, Эль-Гуна, Утёс, Море) — $40.
+            Аренда 1 летящего платья на ваш выбор входит в стоимость (<span data-p="types.dress.price">$150</span>) только при съёмке на локации «Пустыня». Дополнительное платье для съёмки в пустыне, либо аренда платья при фотосессии на любых других локациях (Хургада, Эль-Гуна, Утёс, Море) — <span data-p="extras.dress.price">$40</span>.
           </div>
         </div>
       </div>
