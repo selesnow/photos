@@ -35,7 +35,8 @@ sh test/run.sh        # 29 сценариев: фото, цены, регрес�
 2. `npx wrangler deploy`.
 3. Менялись типы апдейтов или секрет webhook, значит `setWebhook` заново (`secret_token`, `allowed_updates`:
    `message` и `callback_query`). Новый секрет: сгенерировать, `wrangler secret put WEBHOOK_SECRET`, тот же в `setWebhook`.
-4. Новые команды: `setMyCommands`.
+4. Новые команды: `setMyCommands` (сейчас `prices`, `reviews`, `help`; **без этого шага команда работает, но в меню
+   бота её не видно**; дважды вызвать: общий список и `scope: all_private_chats`).
 5. Проверка чата: сообщение с сайта → группа → Reply → ответ в виджете. Откат: `npx wrangler rollback`.
 
 ## Секреты
