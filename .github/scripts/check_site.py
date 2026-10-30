@@ -103,6 +103,18 @@ def check() -> list[str]:
         if not thumb.exists():
             errors.append(f"Нет миниатюры для слайда: {thumb.relative_to(ROOT).as_posix()}")
 
+    # 5.1. отзывы: тот же строгий якорь, что в reviews.py, файлы на месте, не меньше 3 (иначе слайдер с loop ломается)
+    if not re.search(r'<div class="swiper swiper-reviews"[^>]*>\s*<div class="swiper-wrapper">\r?\n', html):
+        errors.append('Не найден слайдер отзывов: нужна разметка <div class="swiper swiper-reviews"> → '
+                      '<div class="swiper-wrapper"> и перевод строки после него (туда reviews.py и бот добавляют отзывы).')
+    review_nums = re.findall(r'class="review-card" data-full="img/reviews/(\d+)\.webp"', html)
+    if len(review_nums) < 3:
+        errors.append(f"На сайте {len(review_nums)} отзывов: слайдеру нужно не меньше 3, иначе он работает с ошибками.")
+    for n in review_nums:
+        for rel in (f"img/reviews/{n}.webp", f"img/reviews/thumb/{n}.webp"):
+            if not (ROOT / rel).exists():
+                errors.append(f"Слайд отзыва ссылается на несуществующий файл: {rel}")
+
     # 6. sitemap
     sitemap = read(ROOT / "sitemap.xml")
     if "<lastmod>" not in sitemap or "  </url>" not in sitemap:

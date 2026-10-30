@@ -40,6 +40,10 @@ jobs:
         id: upd
         run: python .github/scripts/update_prices.py
 
+      - name: Проверка сайта перед публикацией
+        if: steps.upd.outputs.changed != '0'
+        run: python -I .github/scripts/check_site.py
+
       - name: Коммит и push
         if: steps.upd.outputs.changed != '0'
         env:

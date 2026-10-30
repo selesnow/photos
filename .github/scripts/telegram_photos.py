@@ -1,5 +1,5 @@
 """
-Загрузка фото из Telegram в портфолио (вызывается GitHub Action .github/workflows/photos.yml).
+Загрузка фото из Telegram в портфолио и скриншотов отзывов (вызывается GitHub Action .github/workflows/photos.yml).
 
   python .github/scripts/telegram_photos.py process   — скачать фото пачки и добавить на сайт
 
@@ -30,12 +30,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / ".claude" / "skills" / "add-photos" / "scripts"))
 sys.path.insert(0, str(ROOT))
 sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import add_photos as ap  # noqa: E402
+import reviews as rv  # noqa: E402
 
 API = os.environ.get("TELEGRAM_API", "https://api.telegram.org")
 MAX_FILES = 20
 MAX_BYTES = 20 * 1024 * 1024
-CATEGORY_NAMES = {"family": "Семейные", "couple": "Парные", "single": "Индивидуальные"}
+CATEGORY_NAMES = {"family": "Семейные", "couple": "Парные", "single": "Индивидуальные", "reviews": "Отзывы"}
 
 
 def telegram(method: str, **params) -> dict:
@@ -107,13 +109,14 @@ def cmd_process() -> None:
         sys.exit("Некорректный ID пачки")
     if category not in CATEGORY_NAMES:
         sys.exit(f"Неизвестная категория: {category!r}")
-    if not isinstance(location, str) or not location:
+    is_review = category == "reviews"  # отзывы идут без локации, в слайдер отзывов, а не в портфолио
+    if not is_review and (not isinstance(location, str) or not location):
         sys.exit("Не указана локация")
     if not files or len(files) > MAX_FILES:
         sys.exit(f"Ожидалось от 1 до {MAX_FILES} фото, пришло {len(files)}")
 
-    # Имена tg_<пачка>_<NN> сортируются в порядке отправки, add_photos присвоит номера по этому порядку
-    section_dir = ap.IMG / category
+    # Имена tg_<пачка>_<NN> сортируются в порядке отправки, номера присваиваются по этому порядку
+    section_dir = rv.IMG if is_review else ap.IMG / category
     names = []
     for i, f in enumerate(files, start=1):
         print(f"Скачиваю {i}/{len(files)}…")
@@ -121,11 +124,14 @@ def cmd_process() -> None:
         names.append(path.name)
 
     try:
-        ap.cmd_add(category, location, names, new_location=False, drop_originals=True)
-    except SystemExit as e:  # add_photos сообщает об ошибках через sys.exit(текст)
+        if is_review:
+            rv.add(names)
+        else:
+            ap.cmd_add(category, location, names, new_location=False, drop_originals=True)
+    except SystemExit as e:  # скрипты сообщают об ошибках через sys.exit(текст)
         raise SystemExit(str(e.code))
 
-    summary = f"{len(files)} фото, {CATEGORY_NAMES[category]}, {location}"
+    summary = f"{len(files)} фото, {CATEGORY_NAMES[category]}" + ("" if is_review else f", {location}")
     write_output(count=len(files), summary=summary, chat_id=payload["chat_id"])
     print(f"\nГотово: {summary}")
 

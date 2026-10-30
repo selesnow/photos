@@ -44,6 +44,9 @@ jobs:
         id: add
         run: python .github/scripts/telegram_photos.py process
 
+      - name: Проверка сайта перед публикацией
+        run: python -I .github/scripts/check_site.py
+
       - name: Коммит и push
         env:
           SUMMARY: ${{ steps.add.outputs.summary }}

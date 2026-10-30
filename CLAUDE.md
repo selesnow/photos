@@ -23,7 +23,7 @@
 | Цены | **`prices.json`**, единственный источник; см. [PRICES.md](PRICES.md) |
 | Аналитика GA4 | [ANALYTICS.md](ANALYTICS.md), события и параметры; регистрация в GA: `setup_ga4.R` |
 | Скрипты | `optimize_images.py` (WebP), `.claude/skills/add-photos/scripts/add_photos.py`, `.github/scripts/*` |
-| Автоматизация | `.github/workflows/photos.yml` (фото из Telegram), `prices.yml` (цены из Telegram) |
+| Автоматизация | `.github/workflows/photos.yml` (фото и отзывы из Telegram), `prices.yml` (цены), `reviews.yml` (удаление отзывов), `check.yml` (проверка сайта на каждый push) |
 | **Бот и Worker** | отдельный репозиторий `..\tg-chat-worker` (рядом с этим, **не внутри!**), приватная копия на GitHub: `selesnow/tg-chat-worker`; см. его `README.md` |
 
 ### Управление сайтом через Telegram-бота (@photosessions_chat_bot, личка, только админы)
@@ -33,7 +33,14 @@
   в начало раздела и в `sitemap.xml`, коммитит в `main`, бот пишет «✅ Добавлено».
 - **Цены:** `/prices` → раздел → позиция → ± или ввод числа → «Опубликовать» → Action `prices.yml` → `update_prices.py`
   меняет `prices.json` и `apply_prices.py` переписывает цены в `index.html`.
+- **Отзывы** (скриншоты в слайдере): добавить = отправить скриншот боту и выбрать «⭐ Отзывы» (или подпись «отзыв»);
+  посмотреть и удалить = `/reviews` → номер → «Удалить» → подтверждение → Action `reviews.yml`. Новые отзывы встают в начало
+  слайдера, `img/reviews/N.webp` до 720 px + миниатюра, оригиналы не хранятся; на сайте всегда остаётся не меньше 3 отзывов.
+  Логика: `.github/scripts/reviews.py` (работает и локально: `list | add | delete`).
 - **Чат на сайте:** виджет → Worker → группа «Фотосессии» в Telegram, ответ Reply возвращается в виджет.
+
+Перед каждой публикацией из бота Action запускает `check_site.py`: если сайт после правки не проходит проверку, коммита
+нет, а бот пишет «ничего не опубликовано» со ссылкой на журнал.
 
 Из-за этого **`main` пополняется коммитами от `github-actions[bot]`** («Фото через Telegram…», «Цены через Telegram…»).
 Перед работой и перед push всегда `git pull --rebase origin main`.
@@ -83,6 +90,10 @@
   `data-loc`, `data-extra`, `"sku"` в Schema). Нельзя удалять метку вместе с текстом: правила считают, что метка есть у
   каждой позиции из `prices.json` (`check_site.py` назовёт, чего нет). Исключения, где ищется текст: «от $N» в
   title/og/twitter (`фотосессии от $…`) и `priceRange`. Ответы FAQ в Schema выводятся из видимого FAQ автоматически.
+- **Отзывы:** слайдер `<div class="swiper swiper-reviews">` → `<div class="swiper-wrapper">` + перевод строки, внутри
+  слайды в шаблоне `swiper-slide > review-card[data-full=img/reviews/N.webp] > img + review-overlay`. Туда вставляет и
+  отсюда вырезает `reviews.py`; не менять структуру слайда. Бот читает номера отзывов из `index.html` по
+  `class="review-card" data-full="img/reviews/N.webp"`. Не оставлять меньше 3 отзывов.
 - **`sitemap.xml`:** формат строк `<image:image><image:loc>…/img/<раздел>/N.webp…` и `<lastmod>`: на них опирается вставка.
 - **Файлы фото:** нумерация сквозная (`N.webp`), следующий номер = максимальный + 1; в папках портфолио не оставлять
   файлов с нечисловыми именами (их примут за новые фото).
