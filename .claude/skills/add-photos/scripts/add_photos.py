@@ -67,7 +67,9 @@ def slide(section: str, n: int, location: str) -> str:
 
 def insert_html(section: str, nums: list[int], location: str) -> None:
     text = INDEX.read_text(encoding="utf-8")
-    m = re.search(rf'id="tab-{section}".*?<div class="swiper-wrapper">\r?\n', text, re.S)
+    # Строгая структура вкладка → слайдер → wrapper: нестрогое «.*?» перескакивало бы в чужой слайдер
+    m = re.search(rf'id="tab-{section}">\s*<div class="swiper swiper-{section}">\s*'
+                  rf'<div class="swiper-wrapper">\r?\n', text)
     if not m:
         sys.exit(f"Не найден раздел tab-{section} в index.html")
     nl = "\r\n" if "\r\n" in m.group(0) else "\n"
