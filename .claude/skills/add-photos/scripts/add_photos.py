@@ -5,7 +5,7 @@
       Показать новые фото (файлы с нечисловыми именами) в img/family, img/couple, img/single
       и список локаций, которые уже есть на сайте.
 
-  python .claude/skills/add-photos/scripts/add_photos.py add <раздел> "<Локация>" [файл ...] [--new-location]
+  python .claude/skills/add-photos/scripts/add_photos.py add <раздел> "<Локация>" [файл ...] [--new-location] [--drop-originals]
       Раздел: family | couple | single.
       Локация должна в точности совпадать с уже существующей на сайте, иначе скрипт
       остановится (защита от опечаток вроде «Утес»). --new-location — для новой локации.
@@ -14,6 +14,8 @@
       2. Делает WebP + миниатюры только для этих файлов (функциями из optimize_images.py).
       3. Вставляет слайды в НАЧАЛО раздела портфолио в index.html.
       4. Вставляет картинки в начало блока раздела в sitemap.xml и обновляет lastmod.
+      --drop-originals — после создания WebP и миниатюры удалить переименованные оригиналы
+      (JPG/PNG), чтобы не раздувать репозиторий. Так работает загрузка через Telegram-бота.
       Фото разных локаций добавляйте отдельными вызовами с явным списком файлов.
 """
 
@@ -103,7 +105,8 @@ def cmd_find() -> None:
     print("Локации на сайте: " + ", ".join(known_locations(html)))
 
 
-def cmd_add(section: str, location: str, names: list[str], new_location: bool) -> None:
+def cmd_add(section: str, location: str, names: list[str], new_location: bool,
+            drop_originals: bool = False) -> None:
     if section not in SECTIONS:
         sys.exit(f"Неизвестный раздел: {section}. Допустимо: {', '.join(SECTIONS)}")
     files = [IMG / section / n for n in names] if names else new_files(section)
@@ -129,6 +132,8 @@ def cmd_add(section: str, location: str, names: list[str], new_location: bool) -
 
     for src in renamed:
         optimize(src)
+        if drop_originals:
+            src.unlink()
     insert_html(section, nums, location)
     insert_sitemap(section, nums)
     oi.check_html()
@@ -140,11 +145,12 @@ def main() -> None:
     sys.stderr.reconfigure(encoding="utf-8")
     args = sys.argv[1:]
     new_location = "--new-location" in args
-    args = [a for a in args if a != "--new-location"]
+    drop_originals = "--drop-originals" in args
+    args = [a for a in args if a not in ("--new-location", "--drop-originals")]
     if args[:1] == ["find"]:
         cmd_find()
     elif args[:1] == ["add"] and len(args) >= 3:
-        cmd_add(args[1], args[2], args[3:], new_location)
+        cmd_add(args[1], args[2], args[3:], new_location, drop_originals)
     else:
         print(__doc__)
         sys.exit(1)
