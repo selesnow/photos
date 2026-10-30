@@ -24,7 +24,7 @@
 | Аналитика GA4 | [ANALYTICS.md](ANALYTICS.md), события и параметры; регистрация в GA: `setup_ga4.R` |
 | Скрипты | `optimize_images.py` (WebP), `.claude/skills/add-photos/scripts/add_photos.py`, `.github/scripts/*` |
 | Автоматизация | `.github/workflows/photos.yml` (фото из Telegram), `prices.yml` (цены из Telegram) |
-| **Бот и Worker** | отдельный репозиторий `..\tg-chat-worker` (рядом с этим, **не внутри!**), см. его `README.md` |
+| **Бот и Worker** | отдельный репозиторий `..\tg-chat-worker` (рядом с этим, **не внутри!**), приватная копия на GitHub: `selesnow/tg-chat-worker`; см. его `README.md` |
 
 ### Управление сайтом через Telegram-бота (@photosessions_chat_bot, личка, только админы)
 
