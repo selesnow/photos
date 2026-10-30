@@ -162,48 +162,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const typeNames = {
-    family: '👨‍👩‍👧‍👦 Семейная ($170)',
-    couple: '💑 Парная ($150)',
-    single: '✨ Индивидуальная ($150)',
-    dress: '👗 Летящее платье ($150)'
+  // Цены не хранятся в JS: их выставляет .github/scripts/apply_prices.py из prices.json
+  // в data-атрибуты кнопок. Здесь только названия.
+  const typeLabels = {
+    family: '👨‍👩‍👧‍👦 Семейная',
+    couple: '💑 Парная',
+    single: '✨ Индивидуальная',
+    dress: '👗 Летящее платье'
   };
 
-  const locConfig = {
-    hurghada: {
-      name: '🌴 Хургада Мамша',
-      cleanName: 'Хургада Мамша',
-      transfer: 30,
-      price: 0
-    },
-    desert: {
-      name: '🏜 Пустыня',
-      cleanName: 'Пустыня',
-      transfer: 30,
-      price: 0
-    },
-    cliff: {
-      name: '🌅 Утёс',
-      cleanName: 'Утёс',
-      transfer: 40,
-      price: 0
-    },
-    sea_desert: {
-      name: '🌊 Море + Пустыня',
-      cleanName: 'Море + Пустыня',
-      transfer: 40,
-      price: 0
-    },
-    el_gouna: {
-      name: '🌴 Эль-Гуна (+$30)',
-      cleanName: 'Эль-Гуна',
-      transfer: 40,
-      price: 30
-    }
+  const locLabels = {
+    hurghada: { name: '🌴 Хургада Мамша', cleanName: 'Хургада Мамша' },
+    desert: { name: '🏜 Пустыня', cleanName: 'Пустыня' },
+    cliff: { name: '🌅 Утёс', cleanName: 'Утёс' },
+    sea_desert: { name: '🌊 Море + Пустыня', cleanName: 'Море + Пустыня' },
+    el_gouna: { name: '🌴 Эль-Гуна', cleanName: 'Эль-Гуна' }
   };
+
+  const typeNames = {};
+  const typeInfo = {};
+  calcTypeBtns.forEach(btn => {
+    const key = btn.getAttribute('data-type');
+    const price = parseInt(btn.getAttribute('data-price'), 10) || 0;
+    // Типы с data-dress-free включают одно платье только на перечисленных локациях
+    const dressFree = (btn.getAttribute('data-dress-free') || '').split(',').filter(Boolean);
+    typeInfo[key] = { price, includesDress: btn.hasAttribute('data-dress-free'), dressFree };
+    typeNames[key] = `${typeLabels[key] || key} ($${price})`;
+  });
+
+  const locConfig = {};
+  calcLocBtns.forEach(btn => {
+    const key = btn.getAttribute('data-loc');
+    const price = parseInt(btn.getAttribute('data-price'), 10) || 0;
+    const label = locLabels[key] || { name: key, cleanName: key };
+    locConfig[key] = {
+      name: price > 0 ? `${label.name} (+$${price})` : label.name,
+      cleanName: label.cleanName,
+      transfer: parseInt(btn.getAttribute('data-transfer'), 10) || 0,
+      price
+    };
+  });
 
   function updateCalculator() {
-    let basePrice = 170;
+    let basePrice = 0;
     let selectedTypeKey = 'family';
     let selectedLocKey = 'hurghada';
     let extrasPrice = 0;
@@ -213,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Получаем выбранный тип съёмки
     calcTypeBtns.forEach(btn => {
       if (btn.classList.contains('selected')) {
-        basePrice = parseInt(btn.getAttribute('data-price')) || 150;
+        basePrice = parseInt(btn.getAttribute('data-price'), 10) || 0;
         selectedTypeKey = btn.getAttribute('data-type');
       }
     });
@@ -249,6 +250,14 @@ document.addEventListener('DOMContentLoaded', () => {
       transferPrice = transferCost;
       transferSummaryText = `+$${transferCost} (${currentLoc.cleanName})`;
       transferMsgText = `Индивидуальный (+$${transferCost}, ${currentLoc.cleanName})`;
+    }
+
+    // Пакет с платьем включает одно платье только на «своих» локациях (в пустыне),
+    // на остальных аренда платья оплачивается по цене доп. платья
+    const typeData = typeInfo[selectedTypeKey];
+    if (typeData && typeData.includesDress && !typeData.dressFree.includes(selectedLocKey) && optDress) {
+      extrasPrice += parseInt(optDress.value, 10) || 0;
+      extrasList.push('👗 Аренда платья');
     }
 
     // Дополнительные опции

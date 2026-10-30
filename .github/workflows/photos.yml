@@ -11,9 +11,9 @@ on:
         description: 'Ручной запуск: JSON как у события (batch, chat_id, category, location, files)'
         required: true
 
-# Пачки обрабатываются строго по очереди, чтобы не конфликтовать в index.html
+# Фото и цены правят index.html, поэтому все такие запуски идут строго по очереди (общая группа)
 concurrency:
-  group: photos
+  group: site-content
   cancel-in-progress: false
 
 permissions:
@@ -67,10 +67,10 @@ jobs:
       - name: Сообщить об успехе
         env:
           MESSAGE: "✅ Добавлено: ${{ steps.add.outputs.summary }}\nНа сайте появится в течение минуты: https://christina-hurghada.photos/#portfolio"
-        run: python .github/scripts/telegram_photos.py notify
+        run: python .github/scripts/tg_notify.py
 
       - name: Сообщить об ошибке
         if: failure()
         env:
           MESSAGE: "⚠️ Не удалось добавить фото на сайт. Подробности: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        run: python .github/scripts/telegram_photos.py notify
+        run: python .github/scripts/tg_notify.py

@@ -2,7 +2,6 @@
 Загрузка фото из Telegram в портфолио (вызывается GitHub Action .github/workflows/photos.yml).
 
   python .github/scripts/telegram_photos.py process   — скачать фото пачки и добавить на сайт
-  python .github/scripts/telegram_photos.py notify    — отправить сообщение в чат (текст из env MESSAGE)
 
 Данные пачки приходят от Cloudflare Worker (репозиторий tg-chat-worker) событием
 repository_dispatch → переменная окружения PAYLOAD (JSON):
@@ -13,7 +12,9 @@ repository_dispatch → переменная окружения PAYLOAD (JSON):
 что и у навыка add-photos): номера, WebP, миниатюры, слайды в начале раздела, sitemap.
 Оригиналы после конвертации удаляются, в репозиторий попадают только WebP.
 
-Переменные окружения: PAYLOAD, TELEGRAM_BOT_TOKEN, MESSAGE (для notify),
+Уведомления в чат отправляет tg_notify.py.
+
+Переменные окружения: PAYLOAD, TELEGRAM_BOT_TOKEN,
 GITHUB_OUTPUT (куда записать count/summary для следующих шагов), TELEGRAM_API (для тестов).
 """
 
@@ -129,22 +130,12 @@ def cmd_process() -> None:
     print(f"\nГотово: {summary}")
 
 
-def cmd_notify() -> None:
-    payload = json.loads(os.environ["PAYLOAD"])
-    res = telegram("sendMessage", chat_id=payload["chat_id"], text=os.environ["MESSAGE"],
-                   disable_web_page_preview="true")
-    if not res.get("ok"):
-        sys.exit(f"Не удалось отправить уведомление: {res.get('description')}")
-
-
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "process":
         cmd_process()
-    elif cmd == "notify":
-        cmd_notify()
     else:
         print(__doc__)
         sys.exit(1)

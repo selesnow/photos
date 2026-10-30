@@ -1,0 +1,82 @@
+name: Цены из Telegram
+
+# Запускается Cloudflare Worker'ом (бот), когда админ нажимает «Опубликовать» в меню цен.
+# Событие приходит только на ветку по умолчанию (main), поэтому файл должен лежать в main.
+on:
+  repository_dispatch:
+    types: [prices_update]
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: 'Ручной запуск: JSON как у события (chat_id, changes)'
+        required: true
+
+# Общая очередь с фото: оба процесса правят index.html
+concurrency:
+  group: site-content
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PAYLOAD: ${{ github.event_name == 'workflow_dispatch' && inputs.payload || toJSON(github.event.client_payload) }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Применить изменения цен
+        id: upd
+        run: python .github/scripts/update_prices.py
+
+      - name: Коммит и push
+        if: steps.upd.outputs.changed != '0'
+        env:
+          SUMMARY: ${{ steps.upd.outputs.summary }}
+          CHANGED: ${{ steps.upd.outputs.changed }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prices.json index.html
+          git commit -m "Цены через Telegram: изменено $CHANGED" -m "$SUMMARY"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            echo "push не прошёл (попытка $i), повторяю"; sleep $((i * 3))
+          done
+          exit 1
+
+      - name: Запросить пересборку Pages
+        if: steps.upd.outputs.changed != '0'
+        continue-on-error: true  # push обычно запускает сборку сам; это страховка
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"
+
+      - name: Сообщить об успехе
+        if: steps.upd.outputs.changed != '0'
+        env:
+          MESSAGE: "✅ Цены обновлены:\n${{ steps.upd.outputs.summary }}\n\nНа сайте изменения появятся в течение минуты."
+        run: python .github/scripts/tg_notify.py
+
+      - name: Сообщить, что менять нечего
+        if: steps.upd.outputs.changed == '0'
+        env:
+          MESSAGE: "ℹ️ Цены на сайте уже такие, изменений не потребовалось."
+        run: python .github/scripts/tg_notify.py
+
+      - name: Сообщить об ошибке
+        if: failure()
+        env:
+          MESSAGE: "⚠️ Не удалось обновить цены на сайте. Подробности: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: python .github/scripts/tg_notify.py

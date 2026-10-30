@@ -1,0 +1,21 @@
+{
+  "currency": "USD",
+  "types": {
+    "family": { "name": "Семейная", "price": 170 },
+    "couple": { "name": "Парная (Love Story)", "price": 150 },
+    "single": { "name": "Индивидуальная", "price": 150 },
+    "dress": { "name": "Летящее платье", "price": 150, "dress_included_at": ["desert"] }
+  },
+  "locations": {
+    "hurghada": { "name": "Хургада Мамша", "surcharge": 0, "transfer": 30 },
+    "desert": { "name": "Пустыня", "surcharge": 0, "transfer": 30 },
+    "cliff": { "name": "Утёс", "surcharge": 0, "transfer": 40 },
+    "sea_desert": { "name": "Море + Пустыня", "surcharge": 0, "transfer": 40 },
+    "el_gouna": { "name": "Эль-Гуна", "surcharge": 30, "transfer": 40 }
+  },
+  "extras": {
+    "fast": { "name": "Быстрая обработка (2-3 дня)", "price": 40 },
+    "dress": { "name": "Аренда доп. платья / образа", "price": 40 },
+    "raw": { "name": "Все исходники снимков", "price": 30 }
+  }
+}
