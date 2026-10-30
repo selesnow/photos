@@ -2,7 +2,7 @@
   "currency": "USD",
   "types": {
     "family": { "name": "Семейная", "price": 170 },
-    "couple": { "name": "Парная (Love Story)", "price": 160 },
+    "couple": { "name": "Парная (Love Story)", "price": 150 },
     "single": { "name": "Индивидуальная", "price": 150 },
     "dress": { "name": "Летящее платье", "price": 150, "dress_included_at": ["desert"] }
   },
