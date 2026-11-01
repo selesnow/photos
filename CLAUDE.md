@@ -23,7 +23,7 @@
 | Цены | **`prices.json`**, единственный источник; см. [PRICES.md](PRICES.md) |
 | Аналитика GA4 | [ANALYTICS.md](ANALYTICS.md), события и параметры; регистрация в GA: `setup_ga4.R` |
 | Скрипты | `optimize_images.py` (WebP), `.claude/skills/add-photos/scripts/add_photos.py`, `.github/scripts/*` |
-| Автоматизация | `.github/workflows/photos.yml` (фото и отзывы из Telegram), `prices.yml` (цены), `reviews.yml` (удаление отзывов), `check.yml` (проверка сайта на каждый push) |
+| Автоматизация | `.github/workflows/photos.yml` (фото и отзывы из Telegram), `prices.yml` (цены), `reviews.yml` (удаление отзывов), `portfolio.yml` (управление портфолио: удаление и смена локации), `check.yml` (проверка сайта на каждый push) |
 | **Бот и Worker** | отдельный репозиторий `..\tg-chat-worker` (рядом с этим, **не внутри!**), приватная копия на GitHub: `selesnow/tg-chat-worker`; см. его `README.md` |
 
 ### Управление сайтом через Telegram-бота (@photosessions_chat_bot, личка, только админы)
@@ -37,6 +37,9 @@
   посмотреть и удалить = `/reviews` → номер → «Удалить» → подтверждение → Action `reviews.yml`. Новые отзывы встают в начало
   слайдера, `img/reviews/N.webp` до 720 px + миниатюра, оригиналы не хранятся; на сайте всегда остаётся не меньше 3 отзывов.
   Логика: `.github/scripts/reviews.py` (работает и локально: `list | add | delete`).
+- **Портфолио:** `/portfolio` → категория → выбор фото (кнопки номеров или пагинация) → просмотр превью → «🗑 Удалить»
+  или «📍 Сменить локацию» → Action `portfolio.yml`. Логика: `.github/scripts/portfolio.py` (работает и локально:
+  `list | delete | set-location`). На сайте всегда остаётся не меньше 4 фото в каждом разделе.
 - **Чат на сайте:** виджет → Worker → группа «Фотосессии» в Telegram, ответ Reply возвращается в виджет.
 
 Перед каждой публикацией из бота Action запускает `check_site.py`: если сайт после правки не проходит проверку, коммита
