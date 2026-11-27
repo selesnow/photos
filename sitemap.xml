@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://christina-hurghada.photos/</loc>
-    <lastmod>2026-11-25</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image><image:loc>https://christina-hurghada.photos/img/Christie.webp</image:loc></image:image>
@@ -73,6 +73,16 @@
     <image:image><image:loc>https://christina-hurghada.photos/img/couple/11.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/couple/12.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/couple/13.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/37.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/38.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/39.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/40.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/41.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/42.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/43.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/44.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/45.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/single/46.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/single/25.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/single/26.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/single/27.webp</image:loc></image:image>
