@@ -3,10 +3,20 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://christina-hurghada.photos/</loc>
-    <lastmod>2026-11-27</lastmod>
+    <lastmod>2026-11-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image><image:loc>https://christina-hurghada.photos/img/Christie.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/44.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/45.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/46.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/47.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/48.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/49.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/50.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/51.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/52.webp</image:loc></image:image>
+    <image:image><image:loc>https://christina-hurghada.photos/img/family/53.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/family/40.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/family/41.webp</image:loc></image:image>
     <image:image><image:loc>https://christina-hurghada.photos/img/family/42.webp</image:loc></image:image>
